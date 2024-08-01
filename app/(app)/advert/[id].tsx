@@ -6,7 +6,7 @@ export default function Advert() {
 
   return (
     <View>
-      <Text>Advert: {id}</Text>;
+      <Text>Advert: {id}</Text>
     </View>
   );
 }

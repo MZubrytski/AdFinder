@@ -30,7 +30,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="favorites"
+        name="Favorites"
         options={{
           title: 'Favorites',
           tabBarIcon: ({ color, focused }) => (
@@ -42,7 +42,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="create"
+        name="CreateAd"
         options={{
           title: 'Create Advert',
           tabBarIcon: ({ color, focused }) => (
@@ -54,7 +54,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="messages"
+        name="Messages"
         options={{
           title: 'Messages',
           tabBarIcon: ({ color, focused }) => (
@@ -66,7 +66,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="Profile"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (

@@ -8,7 +8,7 @@ export default function TabLayout() {
   const isAuth = false;
 
   if (!isAuth && !publicPath.includes(pathName)) {
-    return <Redirect href="/sign-in" />;
+    return <Redirect href="/Sign-in" />;
   }
 
   return <Slot />;

@@ -16,25 +16,25 @@ export default function Layout() {
           }}
         />
         <Drawer.Screen
-          name="favorites"
+          name="Favorites"
           options={{
             drawerLabel: 'Favorites',
           }}
         />
         <Drawer.Screen
-          name="create"
+          name="CreateAd"
           options={{
             drawerLabel: 'Create',
           }}
         />
         <Drawer.Screen
-          name="messages"
+          name="Messages"
           options={{
             drawerLabel: 'Messages',
           }}
         />
         <Drawer.Screen
-          name="profile"
+          name="Profile"
           options={{
             drawerLabel: 'Profile',
           }}

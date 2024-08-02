@@ -5,7 +5,7 @@ export default function SignInScreen() {
   return (
     <View>
       <Text>Sing In!</Text>
-      <Link href="/sign-up">Not register yet? Sign Up!</Link>
+      <Link href="/Sign-up">Not register yet? Sign Up!</Link>
     </View>
   );
 }

@@ -10,7 +10,8 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "npm run prepare"
   },
   "jest": {
     "preset": "jest-expo"

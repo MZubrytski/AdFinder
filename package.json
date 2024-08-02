@@ -10,13 +10,15 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "npm run prepare"
   },
   "jest": {
     "preset": "jest-expo"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native": "^6.0.2",
     "expo": "~51.0.23",
     "expo-constants": "~16.0.2",

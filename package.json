@@ -11,7 +11,8 @@
     "test": "jest --watchAll",
     "lint": "expo lint",
     "prepare": "husky",
-    "postinstall": "npm run prepare"
+    "postinstall": "npm run prepare",
+    "eslint": "npx eslint . --fix && npx expo lint"
   },
   "jest": {
     "preset": "jest-expo"

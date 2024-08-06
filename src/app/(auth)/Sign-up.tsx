@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
-import { Redirect } from 'expo-router';
 import { useAuthContext } from '@/context/auth/AuthContext';
 
 export default function SignUpScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
-  const { isSignedIn, signUp } = useAuthContext();
+  const { signUp } = useAuthContext();
 
-  return isSignedIn ? (
-    <Redirect href="/" />
-  ) : (
+  return (
     <View>
       <TextInput
         label="Email"

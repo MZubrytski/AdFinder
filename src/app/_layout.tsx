@@ -10,7 +10,9 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-
+import { AuthContextProvider } from '@/context/auth/AuthContext';
+import '../../firebaseConfig';
+import { PaperProvider } from 'react-native-paper';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -32,7 +34,11 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Slot />
+      <PaperProvider>
+        <AuthContextProvider>
+          <Slot />
+        </AuthContextProvider>
+      </PaperProvider>
     </ThemeProvider>
   );
 }

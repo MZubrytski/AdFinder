@@ -3,7 +3,7 @@ import { Href, router } from 'expo-router';
 import { StyleSheet } from 'react-native';
 import { Card, Button, Text } from 'react-native-paper';
 
-export const AdvertComponent = ({ advert }: { advert: Advert }) => {
+export const AdvertItem = ({ advert }: { advert: Advert }) => {
   return (
     <Card style={styles.card}>
       <Card.Title title={advert.title}></Card.Title>

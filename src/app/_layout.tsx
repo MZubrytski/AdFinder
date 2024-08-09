@@ -13,8 +13,11 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthContextProvider } from '@/context/auth/AuthContext';
 import '../../firebaseConfig';
 import { PaperProvider } from 'react-native-paper';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -33,12 +36,14 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <PaperProvider>
-        <AuthContextProvider>
-          <Slot />
-        </AuthContextProvider>
-      </PaperProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <PaperProvider>
+          <AuthContextProvider>
+            <Slot />
+          </AuthContextProvider>
+        </PaperProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

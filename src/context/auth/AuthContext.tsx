@@ -7,11 +7,11 @@ import {
 } from 'firebase/auth';
 import React, { useEffect, useReducer } from 'react';
 import { createContext } from 'react';
-import { auth, database } from '../../../firebaseConfig';
+import { auth } from '../../../firebaseConfig';
 import { Alert } from 'react-native';
-import { doc, setDoc } from 'firebase/firestore';
 import { authReducer } from './authReducer';
 import { SET_AUTH_USER, SHOW_LOADER, SIGN_OUT } from './actionTypes';
+import { userService } from '@/api/user.service';
 
 interface AuthContextInterface {
   authenticatedUser: User | null;
@@ -78,9 +78,8 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
         );
         const user = userCredential.user;
 
-        const userRef = doc(database, 'users', user.uid);
-        await setDoc(userRef, {
-          email: email,
+        await userService.setNewUser(user.uid, {
+          email,
           uid: user.uid,
         });
       } catch (error: any) {

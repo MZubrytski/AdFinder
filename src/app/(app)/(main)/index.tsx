@@ -1,28 +1,41 @@
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { Link } from 'expo-router';
+import { useAdverts } from '@/hooks/useAdverts';
+import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { AdvertItem } from '@/components/AdvertItem';
 
 export default function HomeScreen() {
-  const adverts = [
-    { id: '1', name: 'Ad 1' },
-    { id: '2', name: 'Ad 2' },
-  ];
+  const { adverts, isFetching } = useAdverts();
+
+  if (isFetching) {
+    return (
+      <SafeAreaView
+        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+      >
+        <ActivityIndicator size="large" />
+      </SafeAreaView>
+    );
+  }
 
   return (
-    <ThemedView>
-      <ThemedText>Home Screen</ThemedText>
+    <SafeAreaView>
+      <ThemedView>
+        <ThemedText>Home Screen</ThemedText>
 
-      {adverts.map((ad) => (
-        <Link
-          key={ad.id}
-          href={{
-            pathname: '/advert/[id]',
-            params: { id: `${ad.id}` },
-          }}
-        >
-          {`Advert ${ad.id} ${ad.name}`}
-        </Link>
-      ))}
-    </ThemedView>
+        <FlatList
+          data={adverts}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <AdvertItem advert={item} />}
+          contentContainerStyle={styles.listContainer}
+        />
+      </ThemedView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  listContainer: {
+    padding: 10,
+  },
+});

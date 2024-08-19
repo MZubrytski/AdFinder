@@ -1,5 +1,5 @@
 import { ReactNativeAsyncStorage } from './ReactNativeAsyncStorage';
-import { StorageProvider } from './StorageProvider.inteface';
+import { StorageProvider } from './StorageProvider.interface';
 
 export class StorageBuilder {
   build<T>(): StorageProvider<T> {

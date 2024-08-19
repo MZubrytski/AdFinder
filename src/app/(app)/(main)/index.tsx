@@ -26,7 +26,7 @@ export default function HomeScreen() {
         <FlatList
           data={adverts}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <AdvertItem advert={item} />}
+          renderItem={() => <AdvertItem />}
           contentContainerStyle={styles.listContainer}
         />
       </ThemedView>

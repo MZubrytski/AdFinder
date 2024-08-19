@@ -1,7 +1,6 @@
 import { Link } from 'expo-router';
 import { useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { View, Text, Pressable, TextInput } from 'react-native';
 import { useAuthContext } from '@/context/auth/AuthContext';
 
 export default function SignInScreen() {
@@ -12,24 +11,13 @@ export default function SignInScreen() {
   return (
     <View>
       <Text>Sing In!</Text>
+      <TextInput value={email} onChangeText={(text) => setEmail(text)} />
       <TextInput
-        label="Email"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        label="Password"
         value={password}
         onChangeText={(text) => setPassword(text)}
         secureTextEntry={true}
       />
-      <Button
-        icon="login"
-        mode="contained"
-        onPress={() => signIn(email, password)}
-      >
-        Login
-      </Button>
+      <Text onPress={() => signIn(email, password)}>Login</Text>
       <Link href="/Sign-up" asChild>
         <Pressable>
           <Text>Sign Up</Text>

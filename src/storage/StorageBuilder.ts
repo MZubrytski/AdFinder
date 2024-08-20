@@ -1,3 +1,4 @@
+import { MMKVStorage } from './MMKVStorage';
 import { ReactNativeAsyncStorage } from './ReactNativeAsyncStorage';
 import { StorageProvider } from './StorageProvider.interface';
 
@@ -8,6 +9,8 @@ export class StorageBuilder {
     switch (storageType) {
       case 'react-native-async-storage':
         return new ReactNativeAsyncStorage();
+      case 'mmkv':
+        return new MMKVStorage();
       default:
         throw new Error('Unsupported storage type');
     }

@@ -14,10 +14,10 @@ import { AuthContextProvider } from '@/context/auth/AuthContext';
 import '../../firebaseConfig';
 import { PaperProvider } from 'react-native-paper';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { MMKV } from 'react-native-mmkv';
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-export const storage = new MMKV();
+
 const queryClient = new QueryClient();
 
 export default function RootLayout() {

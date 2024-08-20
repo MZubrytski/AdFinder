@@ -1,14 +1,12 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { useAuthContext } from '@/context/auth/AuthContext';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 export default function ProfileScreen() {
   const { logout } = useAuthContext();
   return (
-    <ThemedView>
-      <ThemedText>Profile Screen</ThemedText>
+    <View>
+      <Text>Profile Screen</Text>
       <Text onPress={() => logout()}>Logout</Text>
-    </ThemedView>
+    </View>
   );
 }

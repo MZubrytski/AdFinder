@@ -1,10 +1,9 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { Text, View } from 'react-native';
 
 export default function FavoritesScreen() {
   return (
-    <ThemedView>
-      <ThemedText>Favorites Screen</ThemedText>
-    </ThemedView>
+    <View>
+      <Text>Favorites Screen</Text>
+    </View>
   );
 }

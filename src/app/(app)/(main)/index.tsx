@@ -1,7 +1,11 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { useAdverts } from '@/hooks/useAdverts';
-import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AdvertItem } from '@/components/AdvertItem';
 
@@ -20,8 +24,8 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView>
-      <ThemedView>
-        <ThemedText>Home Screen</ThemedText>
+      <View>
+        <Text>Home Screen</Text>
 
         <FlatList
           data={adverts}
@@ -29,7 +33,7 @@ export default function HomeScreen() {
           renderItem={() => <AdvertItem />}
           contentContainerStyle={styles.listContainer}
         />
-      </ThemedView>
+      </View>
     </SafeAreaView>
   );
 }

@@ -1,10 +1,9 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { Text, View } from 'react-native';
 
 export default function CreateAdvertScreen() {
   return (
-    <ThemedView>
-      <ThemedText>Create Advert Screen</ThemedText>
-    </ThemedView>
+    <View>
+      <Text>Create Advert Screen</Text>
+    </View>
   );
 }

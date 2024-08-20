@@ -1,13 +1,8 @@
 import { useAdverts } from '@/hooks/useAdverts';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AdvertItem } from '@/components/AdvertItem';
+import { Text, View } from 'react-native-ui-lib';
 
 export default function HomeScreen() {
   const { adverts, isFetching } = useAdverts();

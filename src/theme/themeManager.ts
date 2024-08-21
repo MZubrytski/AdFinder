@@ -1,12 +1,18 @@
 import { Colors, ThemeManager } from 'react-native-ui-lib';
 
-ThemeManager.setComponentTheme(
+ThemeManager.setComponentForcedTheme(
   'Button',
-  (props: { type: 'primary' | 'secondary' }) => {
+  (props: { type: 'primary' | 'secondary'; disabled: boolean }) => {
+    if (props.disabled) {
+      return {
+        color: Colors.gray300,
+      };
+    }
+
     if (props.type === 'primary') {
       return {
         backgroundColor: Colors.primaryColor,
-        color: Colors.light,
+        color: Colors.light100,
       };
     }
 

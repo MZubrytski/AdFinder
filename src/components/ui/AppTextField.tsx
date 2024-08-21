@@ -1,12 +1,20 @@
-import { Colors, Text, TextField } from 'react-native-ui-lib';
+import { Colors, TextField } from 'react-native-ui-lib';
 
 export const AppTextField = ({
   placeholder,
   modifiers,
   onChangeText,
-  trailingAccessory = null,
+  trailingAccessory = undefined,
   secureTextEntry = false,
-}: any) => {
+}: {
+  placeholder: string;
+  modifiers?: Record<string, boolean>;
+  onChangeText?: (text: string) => void;
+  trailingAccessory?:
+    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+    | undefined;
+  secureTextEntry?: boolean;
+}) => {
   return (
     <TextField
       {...modifiers}
@@ -14,6 +22,7 @@ export const AppTextField = ({
       onChangeText={onChangeText}
       placeholder={placeholder}
       placeholderTextColor={Colors.gray300}
+      trailingAccessory={trailingAccessory}
       containerStyle={{
         paddingHorizontal: 16,
         paddingVertical: 16,
@@ -26,7 +35,6 @@ export const AppTextField = ({
         fontSize: 16,
         fontWeight: 'medium',
       }}
-      trailingAccessory={trailingAccessory}
     />
   );
 };

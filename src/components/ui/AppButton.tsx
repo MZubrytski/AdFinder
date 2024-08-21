@@ -1,12 +1,19 @@
 import { Button, Colors } from 'react-native-ui-lib';
+import { ButtonSizeProp } from 'react-native-ui-lib/src/components/button/types';
 
 export const AppButton = ({
   children,
+  disabled = false,
   onPress,
-  disabled,
   type = 'primary',
   size = Button.sizes.medium,
-}: any) => {
+}: {
+  children: string;
+  disabled?: boolean;
+  onPress?: () => void;
+  type?: any;
+  size?: ButtonSizeProp;
+}) => {
   return (
     <Button
       paddingV-16
@@ -18,7 +25,6 @@ export const AppButton = ({
       onPress={onPress}
       labelStyle={{ fontSize: 16, fontWeight: 700 }}
       style={disabled ? { backgroundColor: Colors.gray100 } : {}}
-      color={disabled ? Colors.gray300 : ''}
     />
   );
 };

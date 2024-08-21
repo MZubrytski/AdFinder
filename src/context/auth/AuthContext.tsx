@@ -18,11 +18,7 @@ interface AuthContextInterface {
   isLoading: boolean;
   isSignedIn: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (
-    email: string,
-    password: string,
-    repeatedPassword: string,
-  ) => Promise<void>;
+  signUp: (email: string, password: string, userName: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -63,12 +59,8 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
     }
   };
 
-  const signUp = async (
-    email: string,
-    password: string,
-    repeatedPassword: string,
-  ) => {
-    if (email && password === repeatedPassword) {
+  const signUp = async (email: string, password: string, userName: string) => {
+    if (email && password) {
       try {
         showLoader();
         const userCredential = await createUserWithEmailAndPassword(
@@ -80,6 +72,7 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
 
         await userService.setNewUser(user.uid, {
           email,
+          userName,
           uid: user.uid,
         });
       } catch (error: any) {

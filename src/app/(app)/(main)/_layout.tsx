@@ -2,14 +2,16 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from 'react-native-ui-lib';
+import { Colors, Text } from 'react-native-ui-lib';
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors.primaryColor,
-        headerShown: false,
+        headerShown: true,
+        headerShadowVisible: false,
+        headerTitleAlign: 'center',
       }}
     >
       <Tabs.Screen
@@ -24,6 +26,22 @@ export default function TabLayout() {
               />
             );
           },
+          headerTitle: () => (
+            <Text marginT-16 pageHeader>
+              Home
+            </Text>
+          ),
+          headerRight: () => (
+            <Text
+              marginT-16
+              marginR-16
+              primaryColor
+              bodyMedium
+              onPress={() => {}}
+            >
+              Filter
+            </Text>
+          ),
         }}
       />
       <Tabs.Screen

@@ -18,23 +18,13 @@ export const AppTextField = ({
   return (
     <TextField
       {...modifiers}
+      rounder
+      bodyMedium
       secureTextEntry={secureTextEntry}
       onChangeText={onChangeText}
       placeholder={placeholder}
       placeholderTextColor={Colors.gray300}
       trailingAccessory={trailingAccessory}
-      containerStyle={{
-        paddingHorizontal: 16,
-        paddingVertical: 16,
-        borderColor: Colors.gray200,
-        borderWidth: 1,
-        backgroundColor: Colors.gray100,
-        borderRadius: 8,
-      }}
-      style={{
-        fontSize: 16,
-        fontWeight: 'medium',
-      }}
     />
   );
 };

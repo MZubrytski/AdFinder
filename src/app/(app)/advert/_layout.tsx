@@ -1,20 +1,26 @@
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { HeaderIcon } from '@/components/navigation/HeaderIcon';
 import { router, Stack } from 'expo-router';
 import React from 'react';
+import { Colors } from 'react-native-ui-lib';
 
 export default function AdvertLayout() {
   return (
     <Stack
       screenOptions={{
-        title: 'Advert Layout',
+        title: 'Advert',
         headerLeft: () => (
-          <TabBarIcon
+          <HeaderIcon
             name="arrow-back"
+            style={{ marginRight: 12 }}
             onPress={() => {
               router.back();
             }}
           />
         ),
+        contentStyle: {
+          paddingHorizontal: 16,
+          backgroundColor: Colors.light100,
+        },
       }}
     />
   );

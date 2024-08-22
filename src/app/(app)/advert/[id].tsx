@@ -1,11 +1,7 @@
 import { useAdvert } from '@/hooks/useAdvert';
 import { useLocalSearchParams } from 'expo-router';
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { ActivityIndicator, SafeAreaView } from 'react-native';
+import { Text, View, Image } from 'react-native-ui-lib';
 
 export default function Advert() {
   const { id } = useLocalSearchParams();
@@ -21,11 +17,30 @@ export default function Advert() {
     );
   }
 
-  return <View style={styles.container}>Advert Page</View>;
+  return (
+    <View>
+      <Image
+        marginV-32
+        source={{
+          uri: 'https://fastly.picsum.photos/id/295/200/200.jpg?hmac=nsWHMt5f11TALPFeS_0t6tIlO2CkViBNAbAbSlhu8P4',
+        }}
+        style={{
+          width: '100%',
+          height: 196,
+          borderRadius: 8,
+        }}
+      />
+      <View>
+        <Text headerMedium marginB-8>
+          {advert.title}
+        </Text>
+        <Text headerSmall marginB-8>
+          {advert.price} {advert.currency}
+        </Text>
+        <Text bodyMedium gray400>
+          {advert.description}
+        </Text>
+      </View>
+    </View>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-});

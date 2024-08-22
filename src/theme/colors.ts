@@ -7,4 +7,5 @@ Colors.loadColors({
   gray100: '#F6F6F6',
   gray200: '#E8E8E8',
   gray300: '#BDBDBD',
+  gray400: '#666666',
 });

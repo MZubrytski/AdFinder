@@ -1,9 +1,8 @@
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { useAdverts } from '@/hooks/useAdverts';
 import { ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AdvertItem } from '@/components/AdvertItem';
+import { Text, View } from 'react-native-ui-lib';
 
 export default function HomeScreen() {
   const { adverts, isFetching } = useAdverts();
@@ -20,16 +19,16 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView>
-      <ThemedView>
-        <ThemedText>Home Screen</ThemedText>
+      <View>
+        <Text>Home Screen</Text>
 
         <FlatList
           data={adverts}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <AdvertItem advert={item} />}
+          renderItem={() => <AdvertItem />}
           contentContainerStyle={styles.listContainer}
         />
-      </ThemedView>
+      </View>
     </SafeAreaView>
   );
 }

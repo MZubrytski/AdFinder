@@ -1,40 +1,55 @@
-import { Link } from 'expo-router';
 import { useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
 import { useAuthContext } from '@/context/auth/AuthContext';
+import { AppTextField } from '@/components/ui/AppTextField';
+import { Text, View } from 'react-native-ui-lib';
+import { AppButton } from '@/components/ui/AppButton';
 
 export default function SignInScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const { signIn } = useAuthContext();
 
   return (
-    <View>
-      <Text>Sing In!</Text>
-      <TextInput
-        label="Email"
-        value={email}
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        label="Password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        secureTextEntry={true}
-      />
-      <Button
-        icon="login"
-        mode="contained"
-        onPress={() => signIn(email, password)}
-      >
-        Login
-      </Button>
-      <Link href="/Sign-up" asChild>
-        <Pressable>
-          <Text>Sign Up</Text>
-        </Pressable>
-      </Link>
+    <View
+      style={{
+        flex: 1,
+      }}
+    >
+      <View>
+        <AppTextField
+          placeholder="Email"
+          modifiers={{ 'marginB-16': true, 'marginT-32': true }}
+          onChangeText={(text: string) => setEmail(text)}
+        />
+        <AppTextField
+          placeholder="Password"
+          modifiers={{ 'marginB-16': true }}
+          onChangeText={(text: string) => setPassword(text)}
+          trailingAccessory={
+            <Text
+              primaryColor
+              bodyMedium
+              onPress={() =>
+                setShowPassword((isShowPassword) => !isShowPassword)
+              }
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </Text>
+          }
+          secureTextEntry={!showPassword}
+        />
+      </View>
+
+      <View flex bottom>
+        <AppButton type="primary" onPress={() => signIn(email, password)}>
+          Log In
+        </AppButton>
+
+        <Text marginV-16 primaryColor bodyMediumSemibold center>
+          Forgot you password?
+        </Text>
+      </View>
     </View>
   );
 }

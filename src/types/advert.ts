@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface Advert {
   id: string;
   title: string;
@@ -5,4 +7,5 @@ export interface Advert {
   category: string;
   price: number;
   currency: string;
+  created: Timestamp;
 }

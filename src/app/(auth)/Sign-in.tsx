@@ -11,11 +11,7 @@ export default function SignInScreen() {
   const { signIn } = useAuthContext();
 
   return (
-    <View
-      style={{
-        flex: 1,
-      }}
-    >
+    <View flex>
       <View>
         <AppTextField
           placeholder="Email"

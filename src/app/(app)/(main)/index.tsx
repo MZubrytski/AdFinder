@@ -2,7 +2,7 @@ import { useAdverts } from '@/hooks/useAdverts';
 import { ActivityIndicator, FlatList, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AdvertItem } from '@/components/AdvertItem';
-import { Colors, View } from 'react-native-ui-lib';
+import { Colors, Text, View } from 'react-native-ui-lib';
 import { AppTextField } from '@/components/ui/AppTextField';
 
 export default function HomeScreen() {
@@ -20,14 +20,24 @@ export default function HomeScreen() {
 
   return (
     <View
+      paddingH-16
+      flex
       style={{
         backgroundColor: Colors.light100,
-        flex: 1,
-        paddingHorizontal: 16,
       }}
     >
-      <AppTextField placeholder="Search" modifiers={{ 'marginV-16': true }} />
       <FlatList
+        ListHeaderComponent={
+          <AppTextField
+            placeholder="Search"
+            modifiers={{
+              'marginT-32': true,
+              'marginB-16': true,
+              rounder: true,
+            }}
+          />
+        }
+        ListEmptyComponent={<Text>Unfortunately, nothing was found.</Text>}
         refreshControl={
           <RefreshControl
             refreshing={isFetching}

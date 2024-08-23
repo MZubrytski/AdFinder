@@ -18,7 +18,6 @@ export const AppTextField = ({
   return (
     <TextField
       {...modifiers}
-      rounder
       bodyMedium
       secureTextEntry={secureTextEntry}
       onChangeText={onChangeText}

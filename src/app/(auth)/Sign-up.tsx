@@ -12,11 +12,7 @@ export default function SignUpScreen() {
   const { signUp } = useAuthContext();
 
   return (
-    <View
-      style={{
-        flex: 1,
-      }}
-    >
+    <View flex>
       <View>
         <AppTextField
           placeholder="Name"

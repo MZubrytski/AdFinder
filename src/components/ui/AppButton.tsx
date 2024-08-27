@@ -5,21 +5,21 @@ export const AppButton = ({
   children,
   disabled = false,
   onPress,
-  type = 'primary',
+  modifiers,
   size = Button.sizes.medium,
 }: {
   children: string;
   disabled?: boolean;
   onPress?: () => void;
-  type?: any;
+  modifiers?: Record<string, boolean | number | string>;
   size?: ButtonSizeProp;
 }) => {
   return (
     <Button
+      {...modifiers}
       paddingV-16
       paddingH-32
       disabled={disabled}
-      type={type}
       label={children}
       size={size}
       onPress={onPress}

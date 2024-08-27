@@ -22,7 +22,9 @@ export default function Advert() {
       <Image
         marginV-32
         source={{
-          uri: 'https://fastly.picsum.photos/id/295/200/200.jpg?hmac=nsWHMt5f11TALPFeS_0t6tIlO2CkViBNAbAbSlhu8P4',
+          uri: advert.images?.[0]
+            ? advert.images?.[0]
+            : 'https://fastly.picsum.photos/id/295/200/200.jpg?hmac=nsWHMt5f11TALPFeS_0t6tIlO2CkViBNAbAbSlhu8P4',
         }}
         style={{
           width: '100%',

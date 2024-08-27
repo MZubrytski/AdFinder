@@ -38,7 +38,10 @@ export default function SignInScreen() {
       </View>
 
       <View flex bottom>
-        <AppButton type="primary" onPress={() => signIn(email, password)}>
+        <AppButton
+          modifiers={{ primary: true }}
+          onPress={() => signIn(email, password)}
+        >
           Log In
         </AppButton>
 

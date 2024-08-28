@@ -21,7 +21,7 @@ import { useAdverts } from '@/hooks/useAdverts';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthContext } from '@/context/auth/AuthContext';
 
-const dropdown = require('../../../../assets/icons/chevronDown.png');
+const dropdown = require('@/assets/icons/chevronDown.png');
 
 export default function CreateAdvertScreen() {
   const [title, setTitle] = useState('');

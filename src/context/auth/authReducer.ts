@@ -1,5 +1,11 @@
 import { User } from 'firebase/auth';
-import { SET_AUTH_USER, SHOW_LOADER, SIGN_OUT } from './actionTypes';
+import {
+  SET_AUTH_USER,
+  SET_DB_USER,
+  SHOW_LOADER,
+  SIGN_OUT,
+} from './actionTypes';
+import { DBUser } from '@/types/user';
 
 type SetAuthUserActionType = {
   type: typeof SET_AUTH_USER;
@@ -14,18 +20,28 @@ type ShowLoaderActionType = {
   type: typeof SHOW_LOADER;
 };
 
+type SetDBUserActionType = {
+  type: typeof SET_DB_USER;
+  payload: DBUser;
+};
+
 type ActionTypes =
   | SetAuthUserActionType
   | SignOutActionType
-  | ShowLoaderActionType;
+  | ShowLoaderActionType
+  | SetDBUserActionType;
 
 interface AuthReducerState {
   authenticatedUser: User | null;
+  dbUser: DBUser | null;
   isSignedIn: boolean;
   isLoading: boolean;
 }
 
-export const authReducer = (state: AuthReducerState, action: ActionTypes) => {
+export const authReducer = (
+  state: AuthReducerState,
+  action: ActionTypes,
+): AuthReducerState => {
   switch (action.type) {
     case SET_AUTH_USER:
       return {
@@ -33,6 +49,11 @@ export const authReducer = (state: AuthReducerState, action: ActionTypes) => {
         authenticatedUser: action.payload,
         isSignedIn: true,
         isLoading: false,
+      };
+    case SET_DB_USER:
+      return {
+        ...state,
+        dbUser: action.payload,
       };
     case SIGN_OUT:
       return {

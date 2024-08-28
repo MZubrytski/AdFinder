@@ -9,4 +9,6 @@ export interface Advert {
   price: number;
   currency: string;
   created: Timestamp;
+  userId: string;
+  userName: string;
 }

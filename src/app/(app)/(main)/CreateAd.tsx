@@ -19,6 +19,7 @@ import { useAddAdvert } from '@/hooks/useAddAdvert';
 import { router } from 'expo-router';
 import { useAdverts } from '@/hooks/useAdverts';
 import { Ionicons } from '@expo/vector-icons';
+import { useAuthContext } from '@/context/auth/AuthContext';
 
 const dropdown = require('../../../../assets/icons/chevronDown.png');
 
@@ -33,6 +34,7 @@ export default function CreateAdvertScreen() {
 
   const { addAdvert, isPending } = useAddAdvert();
   const { refetchAdverts } = useAdverts();
+  const { dbUser } = useAuthContext();
 
   if (status === null) {
     requestPermission();
@@ -64,6 +66,8 @@ export default function CreateAdvertScreen() {
         category,
         price,
         currency,
+        userId: dbUser?.id,
+        userName: dbUser?.userName,
         created: Timestamp.now(),
       } as Advert,
       imagesPath: imagesUri,
@@ -94,9 +98,25 @@ export default function CreateAdvertScreen() {
         >
           <View marginR-12>
             <Button
-              style={styles.addImageBtn}
+              style={{
+                width: 80,
+                height: 80,
+                borderWidth: 2,
+                borderRadius: 8,
+                backgroundColor: Colors.gray200,
+                borderColor: Colors.primaryColor,
+              }}
               iconSource={() => (
-                <View style={styles.addImageIconContainer}>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 30,
+                    height: 30,
+                    backgroundColor: Colors.gray300,
+                    borderRadius: 100,
+                  }}
+                >
                   <Ionicons name="add-outline" color={Colors.white} size={24} />
                 </View>
               )}
@@ -192,25 +212,6 @@ const styles = StyleSheet.create({
   },
   imageIcon: {
     position: 'absolute',
-  },
-  addImageBtn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 80,
-    height: 80,
-    borderWidth: 2,
-    borderRadius: 8,
-    borderColor: Colors.primaryColor,
-    color: Colors.secondaryColor,
-    backgroundColor: Colors.gray200,
-  },
-  addImageIconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 30,
-    height: 30,
-    backgroundColor: Colors.gray300,
-    borderRadius: 100,
   },
   imageContainer: {
     flexGrow: 0,

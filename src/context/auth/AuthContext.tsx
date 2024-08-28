@@ -10,11 +10,18 @@ import { createContext } from 'react';
 import { auth } from '../../../firebaseConfig';
 import { Alert } from 'react-native';
 import { authReducer } from './authReducer';
-import { SET_AUTH_USER, SHOW_LOADER, SIGN_OUT } from './actionTypes';
+import {
+  SET_AUTH_USER,
+  SET_DB_USER,
+  SHOW_LOADER,
+  SIGN_OUT,
+} from './actionTypes';
 import { userService } from '@/api/user.service';
+import { DBUser } from '@/types/user';
 
 interface AuthContextInterface {
   authenticatedUser: User | null;
+  dbUser: DBUser | null;
   isLoading: boolean;
   isSignedIn: boolean;
   signIn: (email: string, password: string) => Promise<void>;
@@ -30,6 +37,7 @@ export const AuthContext = createContext({
 export const AuthContextProvider = ({ children }: { children: any }) => {
   const initialState = {
     authenticatedUser: null,
+    dbUser: null,
     isLoading: true,
     isSignedIn: false,
   };
@@ -37,13 +45,18 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, (authenticatedUser) => {
-      if (authenticatedUser) {
-        dispatch({ type: SET_AUTH_USER, payload: authenticatedUser });
-      } else {
-        dispatch({ type: SIGN_OUT });
-      }
-    });
+    const unsubscribeAuth = onAuthStateChanged(
+      auth,
+      async (authenticatedUser) => {
+        if (authenticatedUser) {
+          dispatch({ type: SET_AUTH_USER, payload: authenticatedUser });
+          const dbUser = await userService.getUser(authenticatedUser.uid);
+          dispatch({ type: SET_DB_USER, payload: dbUser });
+        } else {
+          dispatch({ type: SIGN_OUT });
+        }
+      },
+    );
 
     return unsubscribeAuth;
   }, []);
@@ -74,7 +87,7 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
           email,
           userName,
           uid: user.uid,
-        });
+        } as DBUser);
       } catch (error: any) {
         Alert.alert(error.message);
       }
@@ -95,6 +108,7 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
   return (
     <AuthContext.Provider
       value={{
+        dbUser: state.dbUser,
         authenticatedUser: state.authenticatedUser,
         isLoading: state.isLoading,
         isSignedIn: state.isSignedIn,

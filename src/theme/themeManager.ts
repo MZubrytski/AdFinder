@@ -38,6 +38,16 @@ ThemeManager.setComponentTheme('TextField', (props) => {
   };
 });
 
+ThemeManager.setComponentTheme('Text', (props) => {
+  if (props.dangerText) {
+    return {
+      style: {
+        color: Colors.$textDanger,
+      },
+    };
+  }
+});
+
 ThemeManager.setComponentTheme('Picker', (props) => {
   return {
     containerStyle: {

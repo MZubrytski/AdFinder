@@ -7,7 +7,8 @@ import {
   setDoc,
   WithFieldValue,
 } from 'firebase/firestore';
-import { database } from '../../firebaseConfig';
+import { database, filesStorage } from '../../firebaseConfig';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 class FirebaseService {
   async setDocumentWithId(
@@ -16,6 +17,14 @@ class FirebaseService {
     data: WithFieldValue<DocumentData>,
   ): Promise<void> {
     const documentRef = doc(database, collectionName, documentId);
+    await setDoc(documentRef, data);
+  }
+
+  async setDocument(
+    collectionName: string,
+    data: WithFieldValue<DocumentData>,
+  ): Promise<void> {
+    const documentRef = doc(collection(database, collectionName));
     await setDoc(documentRef, data);
   }
 
@@ -40,6 +49,26 @@ class FirebaseService {
     const docSnapshot = await getDoc(documentRef);
 
     return { id: documentId, ...docSnapshot.data() } as T;
+  }
+
+  async uploadImages(imagesPath: string[]): Promise<string[]> {
+    const imageUrls = await Promise.all(
+      imagesPath.map(async (imagePath) => {
+        const response = await fetch(imagePath);
+        const blob = await response.blob();
+        const filename = imagePath
+          .substring(imagePath.lastIndexOf('/'))
+          .replace('/', '');
+
+        const imageRef = ref(filesStorage, filename);
+        const result = await uploadBytes(imageRef, blob);
+
+        const url = await getDownloadURL(result.ref);
+
+        return url;
+      }),
+    );
+    return imageUrls;
   }
 }
 

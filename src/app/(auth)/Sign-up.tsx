@@ -44,7 +44,10 @@ export default function SignUpScreen() {
       </View>
 
       <View flex bottom>
-        <AppButton onPress={() => signUp(email, password, name)}>
+        <AppButton
+          modifiers={{ primary: true }}
+          onPress={() => signUp(email, password, name)}
+        >
           Sign Up
         </AppButton>
 

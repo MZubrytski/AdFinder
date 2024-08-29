@@ -8,7 +8,7 @@ export const AppTextField = ({
   secureTextEntry = false,
 }: {
   placeholder: string;
-  modifiers?: Record<string, boolean>;
+  modifiers?: Record<string, boolean | number | string>;
   onChangeText?: (text: string) => void;
   trailingAccessory?:
     | React.ReactElement<any, string | React.JSXElementConstructor<any>>

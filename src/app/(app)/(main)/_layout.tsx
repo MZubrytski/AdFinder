@@ -1,8 +1,9 @@
-import { Tabs } from 'expo-router';
+import { router, Tabs } from 'expo-router';
 import React from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors, Text } from 'react-native-ui-lib';
+import { HeaderIcon } from '@/components/navigation/HeaderIcon';
 
 export default function TabLayout() {
   return (
@@ -59,13 +60,27 @@ export default function TabLayout() {
       <Tabs.Screen
         name="CreateAd"
         options={{
-          title: 'Create Advert',
+          headerTitle: () => (
+            <Text marginT-16 pageHeader>
+              Create Advert
+            </Text>
+          ),
+          headerLeft: () => (
+            <HeaderIcon
+              name="arrow-back-outline"
+              style={{ marginTop: 20, marginLeft: 16 }}
+              onPress={() => {
+                router.back();
+              }}
+            />
+          ),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? 'add-circle' : 'add-circle-outline'}
               color={color}
             />
           ),
+          tabBarHideOnKeyboard: true,
         }}
       />
       <Tabs.Screen

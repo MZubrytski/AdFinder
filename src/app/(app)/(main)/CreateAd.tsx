@@ -138,35 +138,40 @@ export default function CreateAdvertScreen() {
           style={styles.imageContainer}
           showsHorizontalScrollIndicator={false}
         >
-          <View marginR-12>
-            <Button
-              style={{
-                width: 80,
-                height: 80,
-                borderWidth: 2,
-                borderRadius: 8,
-                backgroundColor: Colors.gray200,
-                borderColor: Colors.primaryColor,
-              }}
-              disabled={imagesUri.length === IMAGES_LIMIT}
-              iconSource={() => (
-                <View
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 30,
-                    height: 30,
-                    backgroundColor: Colors.gray300,
-                    borderRadius: 100,
-                  }}
-                >
-                  <Ionicons name="add-outline" color={Colors.white} size={24} />
-                </View>
-              )}
-              color={Colors.primaryColor}
-              onPress={selectImage}
-            />
-          </View>
+          {imagesUri.length === IMAGES_LIMIT ? null : (
+            <View marginR-12>
+              <Button
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderWidth: 2,
+                  borderRadius: 8,
+                  backgroundColor: Colors.gray200,
+                  borderColor: Colors.primaryColor,
+                }}
+                iconSource={() => (
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 30,
+                      height: 30,
+                      backgroundColor: Colors.gray300,
+                      borderRadius: 100,
+                    }}
+                  >
+                    <Ionicons
+                      name="add-outline"
+                      color={Colors.white}
+                      size={24}
+                    />
+                  </View>
+                )}
+                color={Colors.primaryColor}
+                onPress={selectImage}
+              />
+            </View>
+          )}
 
           {imagesUri.map((imageUri, index) => (
             <View marginR-12 key={index}>

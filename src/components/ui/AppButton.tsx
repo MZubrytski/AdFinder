@@ -1,4 +1,4 @@
-import { Button, Colors } from 'react-native-ui-lib';
+import { Button } from 'react-native-ui-lib';
 import { ButtonSizeProp } from 'react-native-ui-lib/src/components/button/types';
 
 export const AppButton = ({
@@ -24,7 +24,6 @@ export const AppButton = ({
       size={size}
       onPress={onPress}
       labelStyle={{ fontSize: 16, fontWeight: 700 }}
-      style={disabled ? { backgroundColor: Colors.gray100 } : {}}
     />
   );
 };

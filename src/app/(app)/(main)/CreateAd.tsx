@@ -7,9 +7,15 @@ import {
   Button,
   Picker,
   Icon,
+  TouchableOpacity,
 } from 'react-native-ui-lib';
 import * as ImagePicker from 'expo-image-picker';
-import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import { AppTextField } from '@/components/ui/AppTextField';
 import { CATEGORIES, CURRENCY } from '@/constants/pickerData';
 import { AppButton } from '@/components/ui/AppButton';
@@ -20,15 +26,27 @@ import { router } from 'expo-router';
 import { useAdverts } from '@/hooks/useAdverts';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthContext } from '@/context/auth/AuthContext';
+import { Controller, useForm } from 'react-hook-form';
 
 const dropdown = require('@/assets/icons/chevronDown.png');
 
+interface CreateAdvertForm {
+  title: string;
+  description: string;
+  category: string;
+  price: string;
+  currency: string;
+}
+
 export default function CreateAdvertScreen() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [currency, setCurrency] = useState('');
-  const [price, setPrice] = useState(0);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<CreateAdvertForm>({
+    mode: 'onChange',
+  });
+
   const [imagesUri, setImages] = useState([] as string[]);
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
 
@@ -58,13 +76,21 @@ export default function CreateAdvertScreen() {
     );
   };
 
-  const createAdvert = async () => {
+  const createAdvert = async ({
+    title,
+    description,
+    category,
+    price,
+    currency,
+  }: CreateAdvertForm) => {
+    const numericPrice = parseFloat(price);
+
     await addAdvert({
       advert: {
         title,
         description,
         category,
-        price,
+        price: numericPrice,
         currency,
         userId: dbUser?.id,
         userName: dbUser?.userName,
@@ -72,21 +98,15 @@ export default function CreateAdvertScreen() {
       } as Advert,
       imagesPath: imagesUri,
     });
-
-    setTitle('');
-    setDescription('');
-    setCategory('');
-    setCurrency('');
-    setPrice(0);
-    setImages([]);
-
     router.push('/');
-
     refetchAdverts();
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
       <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
         <Text bodyMedium marginB-8>
           Add Images
@@ -140,53 +160,179 @@ export default function CreateAdvertScreen() {
           ))}
         </ScrollView>
 
-        <AppTextField
-          placeholder="Name of the product/service"
-          onChangeText={setTitle}
-        ></AppTextField>
-
-        <Picker
-          placeholder="Category"
-          marginV-16
-          value={category}
-          onChange={(item) => setCategory(item as string)}
-          topBarProps={{ title: 'Category' }}
-          placeholderTextColor={Colors.gray300}
-          trailingAccessory={<Icon source={dropdown} />}
-          items={CATEGORIES}
+        <Controller
+          control={control}
+          name="title"
+          rules={{
+            required: 'Title is required',
+            minLength: {
+              value: 3,
+              message: 'Title must be at least 3 characters long',
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <AppTextField
+              placeholder="Name of the product/service"
+              onChangeText={onChange}
+              value={value}
+              errorMessage={errors.title?.message as string}
+            />
+          )}
         />
 
-        <AppTextField
-          modifiers={{
-            multiline: true,
-            'marginB-16': true,
-            showCharCounter: true,
-            maxLength: 500,
+        <Controller
+          control={control}
+          name="category"
+          rules={{
+            required: 'Category is required',
           }}
-          onChangeText={(text: string) => setDescription(text)}
-          placeholder="Description"
-        ></AppTextField>
+          render={({ field: { onChange, value } }) => (
+            <View marginV-16 style={{ position: 'relative' }}>
+              <Picker
+                placeholder="Category"
+                value={value}
+                onChange={(item) => onChange(item)}
+                topBarProps={{ title: 'Category' }}
+                placeholderTextColor={Colors.gray300}
+                items={CATEGORIES}
+                trailingAccessory={
+                  !!value ? undefined : <Icon source={dropdown} />
+                }
+              />
+              {!!value ? (
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    right: 4,
+                    width: 40,
+                    height: 40,
+                    backgroundColor: 'transparent',
+                    zIndex: 5,
+                    top: 12,
+                  }}
+                  onPress={() => onChange('')}
+                >
+                  <Ionicons
+                    name="close-outline"
+                    color={Colors.black}
+                    size={24}
+                  />
+                </TouchableOpacity>
+              ) : null}
+              {!!errors.category?.message && (
+                <Text marginT-4 marginL-8 bodySmall dangerText>
+                  {errors.category.message as string}
+                </Text>
+              )}
+            </View>
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="description"
+          rules={{
+            required: 'Description is required',
+            minLength: {
+              value: 10,
+              message: 'Description must be at least 10 characters long',
+            },
+          }}
+          render={({ field: { onChange, value } }) => (
+            <AppTextField
+              margins={{ 'marginB-16': true }}
+              modifiers={{
+                multiline: true,
+                showCharCounter: true,
+                maxLength: 500,
+              }}
+              onChangeText={onChange}
+              value={value}
+              placeholder="Description"
+              errorMessage={errors.description?.message as string}
+            />
+          )}
+        />
 
         <View row marginB-16>
           <View flexG-2>
-            <AppTextField
-              placeholder="Price"
-              modifiers={{
-                keyboardType: 'numeric',
+            <Controller
+              control={control}
+              name="price"
+              rules={{
+                required: 'Price is required',
+                min: {
+                  value: 0.01,
+                  message: 'Price must be greater than 0',
+                },
               }}
-              onChangeText={(text: string) => setPrice(Number(text))}
-            ></AppTextField>
+              render={({ field: { onChange, value } }) => (
+                <View flexG-2>
+                  <AppTextField
+                    placeholder="Price"
+                    modifiers={{
+                      keyboardType: 'numeric',
+                    }}
+                    onChangeText={(text) => onChange(text)}
+                    value={value?.toString()}
+                    errorMessage={errors.price?.message as string}
+                  />
+                </View>
+              )}
+            />
           </View>
 
           <View flexG-1 marginL-16>
-            <Picker
-              placeholder="Currency"
-              value={currency}
-              onChange={(item) => setCurrency(item as string)}
-              topBarProps={{ title: 'Currency' }}
-              placeholderTextColor={Colors.gray300}
-              trailingAccessory={<Icon source={dropdown} />}
-              items={CURRENCY}
+            <Controller
+              control={control}
+              name="currency"
+              rules={{
+                required: 'Currency is required',
+              }}
+              render={({ field: { onChange, value } }) => (
+                <View style={{ position: 'relative' }}>
+                  <Picker
+                    placeholder="Currency"
+                    value={value}
+                    onChange={(item) => onChange(item)}
+                    topBarProps={{ title: 'Currency' }}
+                    placeholderTextColor={Colors.gray300}
+                    items={CURRENCY}
+                    trailingAccessory={
+                      !!value ? undefined : <Icon source={dropdown} />
+                    }
+                  />
+                  {!!value ? (
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        right: 4,
+                        width: 40,
+                        height: 40,
+                        backgroundColor: 'transparent',
+                        zIndex: 5,
+                        top: 12,
+                      }}
+                      onPress={() => onChange('')}
+                    >
+                      <Ionicons
+                        name="close-outline"
+                        color={Colors.black}
+                        size={24}
+                      />
+                    </TouchableOpacity>
+                  ) : null}
+                  {!!errors.currency?.message && (
+                    <Text marginT-4 marginL-8 bodySmall dangerText>
+                      {errors.currency.message as string}
+                    </Text>
+                  )}
+                </View>
+              )}
             />
           </View>
         </View>
@@ -194,8 +340,8 @@ export default function CreateAdvertScreen() {
         <View flex bottom>
           <AppButton
             modifiers={{ primary: true }}
-            onPress={createAdvert}
-            disabled={isPending}
+            onPress={handleSubmit(createAdvert)}
+            disabled={isPending || !isValid}
           >
             Add Advert
           </AppButton>

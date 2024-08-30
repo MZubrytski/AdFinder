@@ -27,8 +27,7 @@ import { useAdverts } from '@/hooks/useAdverts';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthContext } from '@/context/auth/AuthContext';
 import { Controller, useForm } from 'react-hook-form';
-
-const dropdown = require('@/assets/icons/chevronDown.png');
+import { AppPicker } from '@/components/ui/AppPicker';
 
 interface CreateAdvertForm {
   title: string;
@@ -37,6 +36,8 @@ interface CreateAdvertForm {
   price: string;
   currency: string;
 }
+
+const IMAGES_LIMIT = 9;
 
 export default function CreateAdvertScreen() {
   const {
@@ -108,9 +109,30 @@ export default function CreateAdvertScreen() {
       style={styles.container}
     >
       <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
-        <Text bodyMedium marginB-8>
-          Add Images
-        </Text>
+        <View
+          marginB-8
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Text bodyMedium>Add Images</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <View marginR-4>
+              <Ionicons name="image-outline" color={Colors.black} size={24} />
+            </View>
+
+            <Text bodySmall>
+              {imagesUri.length} of {IMAGES_LIMIT}
+            </Text>
+          </View>
+        </View>
+
         <ScrollView
           horizontal
           style={styles.imageContainer}
@@ -126,6 +148,7 @@ export default function CreateAdvertScreen() {
                 backgroundColor: Colors.gray200,
                 borderColor: Colors.primaryColor,
               }}
+              disabled={imagesUri.length === IMAGES_LIMIT}
               iconSource={() => (
                 <View
                   style={{
@@ -187,46 +210,15 @@ export default function CreateAdvertScreen() {
             required: 'Category is required',
           }}
           render={({ field: { onChange, value } }) => (
-            <View marginV-16 style={{ position: 'relative' }}>
-              <Picker
-                placeholder="Category"
-                value={value}
-                onChange={(item) => onChange(item)}
-                topBarProps={{ title: 'Category' }}
-                placeholderTextColor={Colors.gray300}
-                items={CATEGORIES}
-                trailingAccessory={
-                  !!value ? undefined : <Icon source={dropdown} />
-                }
-              />
-              {!!value ? (
-                <TouchableOpacity
-                  style={{
-                    position: 'absolute',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    right: 4,
-                    width: 40,
-                    height: 40,
-                    backgroundColor: 'transparent',
-                    zIndex: 5,
-                    top: 12,
-                  }}
-                  onPress={() => onChange('')}
-                >
-                  <Ionicons
-                    name="close-outline"
-                    color={Colors.black}
-                    size={24}
-                  />
-                </TouchableOpacity>
-              ) : null}
-              {!!errors.category?.message && (
-                <Text marginT-4 marginL-8 bodySmall dangerText>
-                  {errors.category.message as string}
-                </Text>
-              )}
-            </View>
+            <AppPicker
+              placeholderTitle="Category"
+              items={CATEGORIES}
+              value={value}
+              onChange={(item) => onChange(item)}
+              topBarProps={{ title: 'Category' }}
+              margins={{ 'marginV-16': true }}
+              errorMessage={errors.category?.message}
+            />
           )}
         />
 
@@ -292,46 +284,14 @@ export default function CreateAdvertScreen() {
                 required: 'Currency is required',
               }}
               render={({ field: { onChange, value } }) => (
-                <View style={{ position: 'relative' }}>
-                  <Picker
-                    placeholder="Currency"
-                    value={value}
-                    onChange={(item) => onChange(item)}
-                    topBarProps={{ title: 'Currency' }}
-                    placeholderTextColor={Colors.gray300}
-                    items={CURRENCY}
-                    trailingAccessory={
-                      !!value ? undefined : <Icon source={dropdown} />
-                    }
-                  />
-                  {!!value ? (
-                    <TouchableOpacity
-                      style={{
-                        position: 'absolute',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        right: 4,
-                        width: 40,
-                        height: 40,
-                        backgroundColor: 'transparent',
-                        zIndex: 5,
-                        top: 12,
-                      }}
-                      onPress={() => onChange('')}
-                    >
-                      <Ionicons
-                        name="close-outline"
-                        color={Colors.black}
-                        size={24}
-                      />
-                    </TouchableOpacity>
-                  ) : null}
-                  {!!errors.currency?.message && (
-                    <Text marginT-4 marginL-8 bodySmall dangerText>
-                      {errors.currency.message as string}
-                    </Text>
-                  )}
-                </View>
+                <AppPicker
+                  placeholderTitle="Currency"
+                  items={CURRENCY}
+                  value={value}
+                  onChange={(item) => onChange(item)}
+                  topBarProps={{ title: 'Currency' }}
+                  errorMessage={errors.currency?.message}
+                />
               )}
             />
           </View>

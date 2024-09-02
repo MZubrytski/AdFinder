@@ -7,9 +7,15 @@ import {
   Button,
   Picker,
   Icon,
+  TouchableOpacity,
 } from 'react-native-ui-lib';
 import * as ImagePicker from 'expo-image-picker';
-import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+} from 'react-native';
 import { AppTextField } from '@/components/ui/AppTextField';
 import { CATEGORIES, CURRENCY } from '@/constants/pickerData';
 import { AppButton } from '@/components/ui/AppButton';
@@ -20,15 +26,29 @@ import { router } from 'expo-router';
 import { useAdverts } from '@/hooks/useAdverts';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthContext } from '@/context/auth/AuthContext';
+import { Controller, useForm } from 'react-hook-form';
+import { AppPicker } from '@/components/ui/AppPicker';
+import { minLengthFieldRule, requiredRule } from '@/constants/validationRules';
 
-const dropdown = require('@/assets/icons/chevronDown.png');
+interface CreateAdvertForm {
+  title: string;
+  description: string;
+  category: string;
+  price: string;
+  currency: string;
+}
+
+const IMAGES_LIMIT = 9;
 
 export default function CreateAdvertScreen() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [currency, setCurrency] = useState('');
-  const [price, setPrice] = useState(0);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<CreateAdvertForm>({
+    mode: 'onChange',
+  });
+
   const [imagesUri, setImages] = useState([] as string[]);
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
 
@@ -58,13 +78,21 @@ export default function CreateAdvertScreen() {
     );
   };
 
-  const createAdvert = async () => {
+  const createAdvert = async ({
+    title,
+    description,
+    category,
+    price,
+    currency,
+  }: CreateAdvertForm) => {
+    const numericPrice = parseFloat(price);
+
     await addAdvert({
       advert: {
         title,
         description,
         category,
-        price,
+        price: numericPrice,
         currency,
         userId: dbUser?.id,
         userName: dbUser?.userName,
@@ -72,58 +100,76 @@ export default function CreateAdvertScreen() {
       } as Advert,
       imagesPath: imagesUri,
     });
-
-    setTitle('');
-    setDescription('');
-    setCategory('');
-    setCurrency('');
-    setPrice(0);
-    setImages([]);
-
     router.push('/');
-
     refetchAdverts();
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAvoidingView behavior={'padding'} style={styles.container}>
       <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
-        <Text bodyMedium marginB-8>
-          Add Images
-        </Text>
+        <View
+          marginB-8
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Text bodyMedium>Add Images</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <View marginR-4>
+              <Ionicons name="image-outline" color={Colors.black} size={24} />
+            </View>
+
+            <Text bodySmall>
+              {imagesUri.length} of {IMAGES_LIMIT}
+            </Text>
+          </View>
+        </View>
+
         <ScrollView
           horizontal
           style={styles.imageContainer}
           showsHorizontalScrollIndicator={false}
         >
-          <View marginR-12>
-            <Button
-              style={{
-                width: 80,
-                height: 80,
-                borderWidth: 2,
-                borderRadius: 8,
-                backgroundColor: Colors.gray200,
-                borderColor: Colors.primaryColor,
-              }}
-              iconSource={() => (
-                <View
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 30,
-                    height: 30,
-                    backgroundColor: Colors.gray300,
-                    borderRadius: 100,
-                  }}
-                >
-                  <Ionicons name="add-outline" color={Colors.white} size={24} />
-                </View>
-              )}
-              color={Colors.primaryColor}
-              onPress={selectImage}
-            />
-          </View>
+          {imagesUri.length === IMAGES_LIMIT ? null : (
+            <View marginR-12>
+              <Button
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderWidth: 2,
+                  borderRadius: 8,
+                  backgroundColor: Colors.gray200,
+                  borderColor: Colors.primaryColor,
+                }}
+                iconSource={() => (
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 30,
+                      height: 30,
+                      backgroundColor: Colors.gray300,
+                      borderRadius: 100,
+                    }}
+                  >
+                    <Ionicons
+                      name="add-outline"
+                      color={Colors.white}
+                      size={24}
+                    />
+                  </View>
+                )}
+                color={Colors.primaryColor}
+                onPress={selectImage}
+              />
+            </View>
+          )}
 
           {imagesUri.map((imageUri, index) => (
             <View marginR-12 key={index}>
@@ -140,53 +186,100 @@ export default function CreateAdvertScreen() {
           ))}
         </ScrollView>
 
-        <AppTextField
-          placeholder="Name of the product/service"
-          onChangeText={setTitle}
-        ></AppTextField>
-
-        <Picker
-          placeholder="Category"
-          marginV-16
-          value={category}
-          onChange={(item) => setCategory(item as string)}
-          topBarProps={{ title: 'Category' }}
-          placeholderTextColor={Colors.gray300}
-          trailingAccessory={<Icon source={dropdown} />}
-          items={CATEGORIES}
+        <Controller
+          control={control}
+          name="title"
+          rules={minLengthFieldRule('Title', 3)}
+          render={({ field: { onChange, value } }) => (
+            <AppTextField
+              placeholder="Name of the product/service"
+              onChangeText={onChange}
+              value={value}
+              errorMessage={errors.title?.message as string}
+            />
+          )}
         />
 
-        <AppTextField
-          modifiers={{
-            multiline: true,
-            'marginB-16': true,
-            showCharCounter: true,
-            maxLength: 500,
-          }}
-          onChangeText={(text: string) => setDescription(text)}
-          placeholder="Description"
-        ></AppTextField>
+        <Controller
+          control={control}
+          name="category"
+          rules={requiredRule('Category')}
+          render={({ field: { onChange, value } }) => (
+            <AppPicker
+              placeholderTitle="Category"
+              items={CATEGORIES}
+              value={value}
+              onChange={(item) => onChange(item)}
+              topBarProps={{ title: 'Category' }}
+              margins={{ 'marginV-16': true }}
+              errorMessage={errors.category?.message}
+            />
+          )}
+        />
+
+        <Controller
+          control={control}
+          name="description"
+          rules={minLengthFieldRule('Description', 10)}
+          render={({ field: { onChange, value } }) => (
+            <AppTextField
+              margins={{ 'marginB-16': true }}
+              modifiers={{
+                multiline: true,
+                showCharCounter: true,
+                maxLength: 500,
+              }}
+              onChangeText={onChange}
+              value={value}
+              placeholder="Description"
+              errorMessage={errors.description?.message as string}
+            />
+          )}
+        />
 
         <View row marginB-16>
           <View flexG-2>
-            <AppTextField
-              placeholder="Price"
-              modifiers={{
-                keyboardType: 'numeric',
+            <Controller
+              control={control}
+              name="price"
+              rules={{
+                required: 'Price is required',
+                min: {
+                  value: 0.01,
+                  message: 'Price must be greater than 0',
+                },
               }}
-              onChangeText={(text: string) => setPrice(Number(text))}
-            ></AppTextField>
+              render={({ field: { onChange, value } }) => (
+                <View flexG-2>
+                  <AppTextField
+                    placeholder="Price"
+                    modifiers={{
+                      keyboardType: 'numeric',
+                    }}
+                    onChangeText={(text) => onChange(text)}
+                    value={value?.toString()}
+                    errorMessage={errors.price?.message as string}
+                  />
+                </View>
+              )}
+            />
           </View>
 
           <View flexG-1 marginL-16>
-            <Picker
-              placeholder="Currency"
-              value={currency}
-              onChange={(item) => setCurrency(item as string)}
-              topBarProps={{ title: 'Currency' }}
-              placeholderTextColor={Colors.gray300}
-              trailingAccessory={<Icon source={dropdown} />}
-              items={CURRENCY}
+            <Controller
+              control={control}
+              name="currency"
+              rules={requiredRule('Currency')}
+              render={({ field: { onChange, value } }) => (
+                <AppPicker
+                  placeholderTitle="Currency"
+                  items={CURRENCY}
+                  value={value}
+                  onChange={(item) => onChange(item)}
+                  topBarProps={{ title: 'Currency' }}
+                  errorMessage={errors.currency?.message}
+                />
+              )}
             />
           </View>
         </View>
@@ -194,8 +287,8 @@ export default function CreateAdvertScreen() {
         <View flex bottom>
           <AppButton
             modifiers={{ primary: true }}
-            onPress={createAdvert}
-            disabled={isPending}
+            onPress={handleSubmit(createAdvert)}
+            disabled={isPending || !isValid}
           >
             Add Advert
           </AppButton>

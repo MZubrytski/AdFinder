@@ -28,6 +28,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuthContext } from '@/context/auth/AuthContext';
 import { Controller, useForm } from 'react-hook-form';
 import { AppPicker } from '@/components/ui/AppPicker';
+import { minLengthFieldRule, requiredRule } from '@/constants/validationRules';
 
 interface CreateAdvertForm {
   title: string;
@@ -104,10 +105,7 @@ export default function CreateAdvertScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
+    <KeyboardAvoidingView behavior={'padding'} style={styles.container}>
       <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
         <View
           marginB-8
@@ -191,13 +189,7 @@ export default function CreateAdvertScreen() {
         <Controller
           control={control}
           name="title"
-          rules={{
-            required: 'Title is required',
-            minLength: {
-              value: 3,
-              message: 'Title must be at least 3 characters long',
-            },
-          }}
+          rules={minLengthFieldRule('Title', 3)}
           render={({ field: { onChange, value } }) => (
             <AppTextField
               placeholder="Name of the product/service"
@@ -211,9 +203,7 @@ export default function CreateAdvertScreen() {
         <Controller
           control={control}
           name="category"
-          rules={{
-            required: 'Category is required',
-          }}
+          rules={requiredRule('Category')}
           render={({ field: { onChange, value } }) => (
             <AppPicker
               placeholderTitle="Category"
@@ -230,13 +220,7 @@ export default function CreateAdvertScreen() {
         <Controller
           control={control}
           name="description"
-          rules={{
-            required: 'Description is required',
-            minLength: {
-              value: 10,
-              message: 'Description must be at least 10 characters long',
-            },
-          }}
+          rules={minLengthFieldRule('Description', 10)}
           render={({ field: { onChange, value } }) => (
             <AppTextField
               margins={{ 'marginB-16': true }}
@@ -285,9 +269,7 @@ export default function CreateAdvertScreen() {
             <Controller
               control={control}
               name="currency"
-              rules={{
-                required: 'Currency is required',
-              }}
+              rules={requiredRule('Currency')}
               render={({ field: { onChange, value } }) => (
                 <AppPicker
                   placeholderTitle="Currency"

@@ -4,6 +4,7 @@ import { AppTextField } from '@/components/ui/AppTextField';
 import { Text, View } from 'react-native-ui-lib';
 import { AppButton } from '@/components/ui/AppButton';
 import { Controller, useForm } from 'react-hook-form';
+import { emailRule, passwordRule } from '@/constants/validationRules';
 
 interface SignInFormData {
   email: string;
@@ -32,13 +33,7 @@ export default function SignInScreen() {
         <Controller
           control={control}
           name="email"
-          rules={{
-            required: 'Email is required',
-            pattern: {
-              value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-              message: 'Invalid email address',
-            },
-          }}
+          rules={emailRule}
           render={({ field: { onChange, value } }) => {
             return (
               <AppTextField
@@ -55,13 +50,7 @@ export default function SignInScreen() {
         <Controller
           control={control}
           name="password"
-          rules={{
-            required: 'Password is required',
-            minLength: {
-              value: 6,
-              message: 'Password must be at least 6 characters long',
-            },
-          }}
+          rules={passwordRule}
           render={({ field: { onChange, value } }) => (
             <AppTextField
               placeholder="Password"

@@ -4,6 +4,11 @@ import { AppTextField } from '@/components/ui/AppTextField';
 import { Text, View } from 'react-native-ui-lib';
 import { AppButton } from '@/components/ui/AppButton';
 import { Controller, useForm } from 'react-hook-form';
+import {
+  emailRule,
+  minLengthFieldRule,
+  passwordRule,
+} from '@/constants/validationRules';
 
 interface SignUpFormData {
   userName: string;
@@ -33,13 +38,7 @@ export default function SignUpScreen() {
         <Controller
           control={control}
           name="userName"
-          rules={{
-            required: 'Name is required',
-            minLength: {
-              value: 3,
-              message: 'Name must be at least 3 characters long',
-            },
-          }}
+          rules={minLengthFieldRule('Name', 3)}
           render={({ field: { onChange, value } }) => (
             <AppTextField
               placeholder="Name"
@@ -54,13 +53,7 @@ export default function SignUpScreen() {
         <Controller
           control={control}
           name="email"
-          rules={{
-            required: 'Email is required',
-            pattern: {
-              value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-              message: 'Invalid email address',
-            },
-          }}
+          rules={emailRule}
           render={({ field: { onChange, value } }) => (
             <AppTextField
               placeholder="Email"
@@ -75,13 +68,7 @@ export default function SignUpScreen() {
         <Controller
           control={control}
           name="password"
-          rules={{
-            required: 'Password is required',
-            minLength: {
-              value: 6,
-              message: 'Password must be at least 6 characters long',
-            },
-          }}
+          rules={passwordRule}
           render={({ field: { onChange, value } }) => (
             <AppTextField
               placeholder="Password"

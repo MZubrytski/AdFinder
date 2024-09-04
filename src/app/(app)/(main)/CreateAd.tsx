@@ -1,21 +1,7 @@
 import { useState } from 'react';
-import {
-  Colors,
-  Text,
-  View,
-  Image,
-  Button,
-  Picker,
-  Icon,
-  TouchableOpacity,
-} from 'react-native-ui-lib';
+import { Colors, Text, View, Image, Button } from 'react-native-ui-lib';
 import * as ImagePicker from 'expo-image-picker';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native';
 import { AppTextField } from '@/components/ui/AppTextField';
 import { CATEGORIES, CURRENCY } from '@/constants/pickerData';
 import { AppButton } from '@/components/ui/AppButton';
@@ -29,6 +15,7 @@ import { useAuthContext } from '@/context/auth/AuthContext';
 import { Controller, useForm } from 'react-hook-form';
 import { AppPicker } from '@/components/ui/AppPicker';
 import { minLengthFieldRule, requiredRule } from '@/constants/validationRules';
+import ReactNativeModal from 'react-native-modal';
 
 interface CreateAdvertForm {
   title: string;
@@ -49,7 +36,9 @@ export default function CreateAdvertScreen() {
     mode: 'onChange',
   });
 
-  const [imagesUri, setImages] = useState([] as string[]);
+  const [imagesUri, setImages] = useState<string[]>([]);
+  const [isModalVisible, setModalVisible] = useState<boolean>(false);
+
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
 
   const { addAdvert, isPending } = useAddAdvert();
@@ -60,9 +49,22 @@ export default function CreateAdvertScreen() {
     requestPermission();
   }
 
-  const selectImage = async () => {
+  const selectImageFromLibrary = async () => {
+    setModalVisible(false);
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      setImages([...imagesUri, result.assets[0].uri]);
+    }
+  };
+
+  const takePhoto = async () => {
+    setModalVisible(false);
+    let result = await ImagePicker.launchCameraAsync({
       allowsEditing: false,
       quality: 0.7,
     });
@@ -166,7 +168,7 @@ export default function CreateAdvertScreen() {
                   </View>
                 )}
                 color={Colors.primaryColor}
-                onPress={selectImage}
+                onPress={() => setModalVisible(true)}
               />
             </View>
           )}
@@ -293,6 +295,65 @@ export default function CreateAdvertScreen() {
             Add Advert
           </AppButton>
         </View>
+
+        <ReactNativeModal
+          isVisible={isModalVisible}
+          onBackdropPress={() => setModalVisible(false)}
+        >
+          <View
+            style={{
+              backgroundColor: Colors.light100,
+              padding: 20,
+              borderRadius: 12,
+            }}
+          >
+            <Text headerMedium center marginB-16 marginT-8>
+              Select Image Source
+            </Text>
+
+            <Ionicons
+              style={{ position: 'absolute', right: 4, top: 4 }}
+              name="close-outline"
+              color={Colors.black}
+              size={36}
+              onPress={() => setModalVisible(false)}
+            />
+
+            <AppButton
+              modifiers={{ iconOnRight: true, primary: true }}
+              onPress={selectImageFromLibrary}
+              iconSource={() => (
+                <Ionicons
+                  style={{ marginLeft: 4 }}
+                  name="images-outline"
+                  color={Colors.white}
+                  size={24}
+                />
+              )}
+            >
+              Choose from Gallery
+            </AppButton>
+
+            <AppButton
+              onPress={takePhoto}
+              modifiers={{
+                'marginT-12': true,
+                iconOnRight: true,
+                primary: true,
+              }}
+              iconSource={() => (
+                <Ionicons
+                  style={{ marginLeft: 4 }}
+                  name="camera-outline"
+                  color={Colors.white}
+                  size={24}
+                />
+              )}
+            >
+              Take a Photo
+            </AppButton>
+          </View>
+        </ReactNativeModal>
       </ScrollView>
     </KeyboardAvoidingView>
   );

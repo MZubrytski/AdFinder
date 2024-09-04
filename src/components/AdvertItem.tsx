@@ -17,9 +17,13 @@ export const AdvertItem = ({ advert }: { advert: Advert }) => {
       <Card.Section
         marginR-16
         style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-        imageSource={{
-          uri: advert.images?.[0] ? advert.images?.[0] : placeholderImageUrl,
-        }}
+        imageSource={
+          advert.images?.[0]
+            ? {
+                uri: advert.images?.[0],
+              }
+            : placeholderImageUrl
+        }
         imageStyle={{
           width: 50,
           height: 50,

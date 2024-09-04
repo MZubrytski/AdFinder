@@ -22,9 +22,13 @@ export default function Advert() {
     <View>
       <Image
         marginV-32
-        source={{
-          uri: advert.images?.[0] ? advert.images?.[0] : placeholderImageUrl,
-        }}
+        source={
+          advert.images?.[0]
+            ? {
+                uri: advert.images?.[0],
+              }
+            : placeholderImageUrl
+        }
         style={{
           width: '100%',
           height: 196,

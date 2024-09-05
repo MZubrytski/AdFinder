@@ -16,6 +16,7 @@ export const AdvertItem = ({ advert }: { advert: Advert }) => {
     >
       <Card.Section
         marginR-16
+        paddingB-8
         style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
         imageSource={
           advert.images?.[0]
@@ -25,8 +26,8 @@ export const AdvertItem = ({ advert }: { advert: Advert }) => {
             : placeholderImageUrl
         }
         imageStyle={{
-          width: 50,
-          height: 50,
+          width: 120,
+          height: 120,
           borderRadius: 8,
         }}
       />
@@ -41,7 +42,7 @@ export const AdvertItem = ({ advert }: { advert: Advert }) => {
           <Text headerSmall flexS-1>
             {advert.title}
           </Text>
-          <Text bodySmall gray300 marginT-2 flexS-0>
+          <Text bodySmall gray300 marginT-2 marginL-4 flexS-0>
             {convertTimestamp(advert.created)}
           </Text>
         </View>

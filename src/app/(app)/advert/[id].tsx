@@ -2,16 +2,13 @@ import { placeholderImageUrl } from '@/constants/placeholderImageUrl';
 import { useAdvert } from '@/hooks/useAdvert';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import {
-  ActivityIndicator,
-  Dimensions,
-  SafeAreaView,
-  ScrollView,
-} from 'react-native';
+import { ActivityIndicator, Dimensions, SafeAreaView } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import { Text, View, Image, Colors } from 'react-native-ui-lib';
 import { convertTimestamp } from '@/utils/functions';
 import { AppButton } from '@/components/ui/AppButton';
+import { AdvertInfo } from '@/components/AdvertInfo';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const { width } = Dimensions.get('window');
 
@@ -32,14 +29,15 @@ export default function Advert() {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView>
+      <ScrollView overScrollMode="never">
         <View style={{ width: width, height: width * 0.7 }}>
           {advert.images?.length ? (
             <>
               <Carousel
                 width={width}
                 data={advert.images}
-                scrollAnimationDuration={100}
+                style={{ width: width, height: width * 0.7 }}
+                scrollAnimationDuration={200}
                 onSnapToItem={(index) => setCurrentImageIndex(index + 1)}
                 loop={false}
                 renderItem={({ index, item }) => (
@@ -89,47 +87,21 @@ export default function Advert() {
           </Text>
         </View>
 
-        <View
-          marginT-8
-          style={{
-            backgroundColor: Colors.white,
+        <AdvertInfo
+          containerStyles={{
+            marginTop: 8,
           }}
-        >
-          <View
-            padding-16
-            style={{
-              backgroundColor: Colors.white,
-              borderBottomWidth: 1,
-              borderBottomColor: Colors.gray200,
-            }}
-          >
-            <Text headerSmall>Description</Text>
-          </View>
-          <View padding-16>
-            <Text>{advert.description}</Text>
-          </View>
-        </View>
+          infoTitle="Description"
+          infoData={advert.description}
+        />
 
-        <View
-          marginT-8
-          style={{
-            backgroundColor: Colors.white,
+        <AdvertInfo
+          containerStyles={{
+            marginTop: 8,
           }}
-        >
-          <View
-            padding-16
-            style={{
-              backgroundColor: Colors.white,
-              borderBottomWidth: 1,
-              borderBottomColor: Colors.gray200,
-            }}
-          >
-            <Text headerSmall>Seller</Text>
-          </View>
-          <View padding-16>
-            <Text>{advert.userName}</Text>
-          </View>
-        </View>
+          infoTitle="Seller"
+          infoData={advert.userName}
+        />
       </ScrollView>
 
       <View

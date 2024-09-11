@@ -4,18 +4,27 @@ import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Dimensions, SafeAreaView } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
-import { Text, View, Image, Colors } from 'react-native-ui-lib';
+import {
+  Text,
+  View,
+  Image,
+  Colors,
+  TouchableOpacity,
+} from 'react-native-ui-lib';
 import { convertTimestamp } from '@/utils/functions';
 import { AppButton } from '@/components/ui/AppButton';
 import { AdvertInfo } from '@/components/AdvertInfo';
 import { ScrollView } from 'react-native-gesture-handler';
+import ReactNativeModal from 'react-native-modal';
+import { Ionicons } from '@expo/vector-icons';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default function Advert() {
   const { id } = useLocalSearchParams();
   const { advert, isFetching } = useAdvert(id as string);
-  const [currentImageNumber, setCurrentImageIndex] = useState(1);
+  const [currentImageNumber, setCurrentImageNumber] = useState(1);
+  const [isFullScreenImageVisible, setFullScreenImageVisible] = useState(false);
 
   if (isFetching || !advert) {
     return (
@@ -38,17 +47,21 @@ export default function Advert() {
                 data={advert.images}
                 style={{ width: width, height: width * 0.7 }}
                 scrollAnimationDuration={200}
-                onSnapToItem={(index) => setCurrentImageIndex(index + 1)}
+                onSnapToItem={(index) => setCurrentImageNumber(index + 1)}
                 loop={false}
                 renderItem={({ index, item }) => (
-                  <View key={index}>
-                    <Image
-                      style={{ width: width, height: width * 0.7 }}
-                      source={{
-                        uri: item,
-                      }}
-                    />
-                  </View>
+                  <TouchableOpacity
+                    onPress={() => setFullScreenImageVisible(true)}
+                  >
+                    <View key={index}>
+                      <Image
+                        style={{ width: width, height: width * 0.7 }}
+                        source={{
+                          uri: item,
+                        }}
+                      />
+                    </View>
+                  </TouchableOpacity>
                 )}
               />
 
@@ -114,6 +127,68 @@ export default function Advert() {
       >
         <AppButton modifiers={{ primary: true }}>Write</AppButton>
       </View>
+
+      <ReactNativeModal
+        animationIn={'bounceInRight'}
+        style={{ backgroundColor: Colors.black, margin: 0 }}
+        isVisible={isFullScreenImageVisible}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'space-between',
+          }}
+        >
+          <View
+            paddingH-8
+            paddingV-4
+            row
+            style={{
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <Text bodyMedium white>
+              {currentImageNumber}/{advert.images.length}
+            </Text>
+            <Ionicons
+              name="close-outline"
+              color={Colors.white}
+              size={36}
+              onPress={() => setFullScreenImageVisible(false)}
+            />
+          </View>
+          <View style={{ width: width, height: height * 0.65 }}>
+            <Carousel
+              width={width}
+              data={advert.images}
+              style={{ width: width, height: height * 0.65 }}
+              scrollAnimationDuration={200}
+              autoPlay={false}
+              loop={false}
+              onSnapToItem={(index) => setCurrentImageNumber(index + 1)}
+              renderItem={({ index, item }) => (
+                <View key={index}>
+                  <Image
+                    style={{
+                      width: width,
+                      height: height * 0.65,
+                    }}
+                    source={{
+                      uri: item,
+                    }}
+                  />
+                </View>
+              )}
+            />
+          </View>
+          <View padding-8 style={{ height: 100 }}>
+            <AppButton modifiers={{ primary: true }} onPress={() => null}>
+              Write
+            </AppButton>
+          </View>
+        </View>
+      </ReactNativeModal>
     </View>
   );
 }

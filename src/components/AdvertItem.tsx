@@ -8,7 +8,7 @@ import { Card, View, Text, Colors, Image } from 'react-native-ui-lib';
 import { CarouselDots } from './ui/CarouselDots';
 
 export const AdvertItem = ({ advert }: { advert: Advert }) => {
-  const [currentImageNumber, setCurrentImageIndex] = useState(1);
+  const [currentImageNumber, setCurrentImageNumber] = useState(1);
 
   return (
     <Card
@@ -26,7 +26,7 @@ export const AdvertItem = ({ advert }: { advert: Advert }) => {
             data={advert.images}
             style={{ width: 120, height: 120 }}
             scrollAnimationDuration={200}
-            onSnapToItem={(index) => setCurrentImageIndex(index + 1)}
+            onSnapToItem={(index) => setCurrentImageNumber(index + 1)}
             loop={false}
             renderItem={({ index, item }) => (
               <View key={index}>

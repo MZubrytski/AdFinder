@@ -1,18 +1,16 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   Colors,
   Text,
   View,
   Image,
   Button,
-  Picker,
-  Icon,
   TouchableOpacity,
 } from 'react-native-ui-lib';
 import * as ImagePicker from 'expo-image-picker';
 import {
+  Dimensions,
   KeyboardAvoidingView,
-  Platform,
   ScrollView,
   StyleSheet,
 } from 'react-native';
@@ -29,6 +27,9 @@ import { useAuthContext } from '@/context/auth/AuthContext';
 import { Controller, useForm } from 'react-hook-form';
 import { AppPicker } from '@/components/ui/AppPicker';
 import { minLengthFieldRule, requiredRule } from '@/constants/validationRules';
+import ReactNativeModal from 'react-native-modal';
+import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
+import { AppButtonIcon } from '@/components/ui/AppButtonIcon';
 
 interface CreateAdvertForm {
   title: string;
@@ -40,6 +41,8 @@ interface CreateAdvertForm {
 
 const IMAGES_LIMIT = 9;
 
+const { width, height } = Dimensions.get('window');
+
 export default function CreateAdvertScreen() {
   const {
     control,
@@ -49,7 +52,14 @@ export default function CreateAdvertScreen() {
     mode: 'onChange',
   });
 
-  const [imagesUri, setImages] = useState([] as string[]);
+  const [imagesUri, setImages] = useState<string[]>([]);
+  const [isFullScreenImageVisible, setFullScreenImageVisible] =
+    useState<boolean>(false);
+  const [isChoosePhotoModalVisible, setChoosePhotoModalModalVisible] =
+    useState<boolean>(false);
+  const [openedImageNumber, setImageNumber] = useState<number>(0);
+  const carouselRef = useRef<ICarouselInstance | null>(null);
+
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
 
   const { addAdvert, isPending } = useAddAdvert();
@@ -60,7 +70,8 @@ export default function CreateAdvertScreen() {
     requestPermission();
   }
 
-  const selectImage = async () => {
+  const selectImageFromLibrary = async () => {
+    setChoosePhotoModalModalVisible(false);
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
@@ -72,10 +83,36 @@ export default function CreateAdvertScreen() {
     }
   };
 
-  const removeImage = (uri: string) => {
+  const takePhoto = async () => {
+    setChoosePhotoModalModalVisible(false);
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: false,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      setImages([...imagesUri, result.assets[0].uri]);
+    }
+  };
+
+  const deleteImage = (index: number) => {
+    const imageUriToDelete = imagesUri[index];
+
     setImages((prevImages) =>
-      prevImages.filter((imageUri) => imageUri !== uri),
+      prevImages.filter((imageUri) => imageUri !== imageUriToDelete),
     );
+
+    if (carouselRef.current) {
+      if (index !== 0) {
+        setImageNumber(index);
+
+        carouselRef.current?.prev();
+      }
+
+      if (index === 0 && imagesUri.length === 1) {
+        setFullScreenImageVisible(false);
+      }
+    }
   };
 
   const createAdvert = async ({
@@ -102,6 +139,16 @@ export default function CreateAdvertScreen() {
     });
     router.push('/');
     refetchAdverts();
+  };
+
+  const changeMainPhoto = () => {
+    const newMainPhotoUri = imagesUri[openedImageNumber - 1];
+    setImages((prevImages) => [
+      newMainPhotoUri,
+      ...prevImages.filter((imageUri) => imageUri !== newMainPhotoUri),
+    ]);
+    setImageNumber(1);
+    carouselRef.current?.scrollTo({ index: 0 });
   };
 
   return (
@@ -166,23 +213,34 @@ export default function CreateAdvertScreen() {
                   </View>
                 )}
                 color={Colors.primaryColor}
-                onPress={selectImage}
+                onPress={() => setChoosePhotoModalModalVisible(true)}
               />
             </View>
           )}
 
           {imagesUri.map((imageUri, index) => (
-            <View marginR-12 key={index}>
-              <Image source={{ uri: imageUri }} style={styles.image} />
-              <View style={styles.imageIconContainer}>
-                <Ionicons
-                  name="close-outline"
-                  color={Colors.white}
-                  size={24}
-                  onPress={() => removeImage(imageUri)}
-                />
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                setFullScreenImageVisible(true);
+                setImageNumber(index + 1);
+                setTimeout(() => {
+                  carouselRef.current?.scrollTo({ index });
+                });
+              }}
+            >
+              <View marginR-12>
+                <Image source={{ uri: imageUri }} style={styles.image} />
+                <View style={styles.imageIconContainer}>
+                  <Ionicons
+                    name="close-outline"
+                    color={Colors.white}
+                    size={24}
+                    onPress={() => deleteImage(index)}
+                  />
+                </View>
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
 
@@ -293,6 +351,131 @@ export default function CreateAdvertScreen() {
             Add Advert
           </AppButton>
         </View>
+
+        <ReactNativeModal
+          isVisible={isChoosePhotoModalVisible}
+          onBackdropPress={() => setChoosePhotoModalModalVisible(false)}
+        >
+          <View
+            padding-20
+            style={{
+              backgroundColor: Colors.light100,
+              borderRadius: 12,
+            }}
+          >
+            <Text headerMedium center marginB-16 marginT-8>
+              Select Image Source
+            </Text>
+
+            <Ionicons
+              style={{ position: 'absolute', right: 4, top: 4 }}
+              name="close-outline"
+              color={Colors.black}
+              size={36}
+              onPress={() => setChoosePhotoModalModalVisible(false)}
+            />
+
+            <AppButton
+              modifiers={{ iconOnRight: true, primary: true }}
+              onPress={selectImageFromLibrary}
+              iconSource={() => <AppButtonIcon name="images-outline" />}
+            >
+              Choose from Gallery
+            </AppButton>
+
+            <AppButton
+              onPress={takePhoto}
+              modifiers={{
+                'marginT-12': true,
+                iconOnRight: true,
+                primary: true,
+              }}
+              iconSource={() => <AppButtonIcon name="camera-outline" />}
+            >
+              Take a Photo
+            </AppButton>
+          </View>
+        </ReactNativeModal>
+
+        <ReactNativeModal
+          animationIn={'bounceInRight'}
+          style={{ backgroundColor: Colors.black, margin: 0 }}
+          isVisible={isFullScreenImageVisible}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'space-between',
+            }}
+          >
+            <View
+              paddingH-8
+              paddingV-4
+              row
+              style={{
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Ionicons
+                name="trash-outline"
+                color={Colors.white}
+                size={28}
+                onPress={() =>
+                  deleteImage(carouselRef.current?.getCurrentIndex() as number)
+                }
+              />
+              <Text bodyMedium white>
+                {openedImageNumber}/{imagesUri.length}
+              </Text>
+              <Ionicons
+                name="close-outline"
+                color={Colors.white}
+                size={36}
+                onPress={() => setFullScreenImageVisible(false)}
+              />
+            </View>
+            <View style={{ width: width, height: height * 0.65 }}>
+              <Carousel
+                ref={carouselRef}
+                width={width}
+                data={imagesUri}
+                style={{ width: width, height: height * 0.65 }}
+                scrollAnimationDuration={200}
+                autoPlay={false}
+                loop={false}
+                onSnapToItem={(index) => setImageNumber(index + 1)}
+                renderItem={({ index, item }) => (
+                  <View key={index}>
+                    <Image
+                      style={{
+                        width: width,
+                        height: height * 0.65,
+                      }}
+                      source={{
+                        uri: item,
+                      }}
+                    />
+                  </View>
+                )}
+              />
+            </View>
+            <View padding-8 style={{ height: 100 }}>
+              {openedImageNumber === 1 ? (
+                <Text center bodyMediumSemibold white>
+                  Main photo
+                </Text>
+              ) : (
+                <AppButton
+                  modifiers={{ primary: true }}
+                  onPress={changeMainPhoto}
+                >
+                  Make a photo the main one
+                </AppButton>
+              )}
+            </View>
+          </View>
+        </ReactNativeModal>
       </ScrollView>
     </KeyboardAvoidingView>
   );

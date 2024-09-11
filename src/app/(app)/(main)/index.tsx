@@ -48,6 +48,7 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <AdvertItem advert={item} />}
         showsVerticalScrollIndicator={false}
+        overScrollMode="never"
       />
     </View>
   );

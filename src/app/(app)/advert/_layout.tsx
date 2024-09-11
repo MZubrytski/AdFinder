@@ -18,8 +18,7 @@ export default function AdvertLayout() {
           />
         ),
         contentStyle: {
-          paddingHorizontal: 16,
-          backgroundColor: Colors.light100,
+          backgroundColor: Colors.gray100,
         },
       }}
     />

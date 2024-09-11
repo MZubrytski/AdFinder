@@ -66,12 +66,12 @@ export default function Advert() {
               />
 
               <View
+                padding-8
                 style={{
                   position: 'absolute',
                   bottom: 10,
                   left: 10,
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  padding: 8,
                   borderRadius: 8,
                 }}
               >

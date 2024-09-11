@@ -29,6 +29,7 @@ import { AppPicker } from '@/components/ui/AppPicker';
 import { minLengthFieldRule, requiredRule } from '@/constants/validationRules';
 import ReactNativeModal from 'react-native-modal';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
+import { AppButtonIcon } from '@/components/ui/AppButtonIcon';
 
 interface CreateAdvertForm {
   title: string;
@@ -356,9 +357,9 @@ export default function CreateAdvertScreen() {
           onBackdropPress={() => setChoosePhotoModalModalVisible(false)}
         >
           <View
+            padding-20
             style={{
               backgroundColor: Colors.light100,
-              padding: 20,
               borderRadius: 12,
             }}
           >
@@ -377,14 +378,7 @@ export default function CreateAdvertScreen() {
             <AppButton
               modifiers={{ iconOnRight: true, primary: true }}
               onPress={selectImageFromLibrary}
-              iconSource={() => (
-                <Ionicons
-                  style={{ marginLeft: 4 }}
-                  name="images-outline"
-                  color={Colors.white}
-                  size={24}
-                />
-              )}
+              iconSource={() => <AppButtonIcon name="images-outline" />}
             >
               Choose from Gallery
             </AppButton>
@@ -396,14 +390,7 @@ export default function CreateAdvertScreen() {
                 iconOnRight: true,
                 primary: true,
               }}
-              iconSource={() => (
-                <Ionicons
-                  style={{ marginLeft: 4 }}
-                  name="camera-outline"
-                  color={Colors.white}
-                  size={24}
-                />
-              )}
+              iconSource={() => <AppButtonIcon name="camera-outline" />}
             >
               Take a Photo
             </AppButton>

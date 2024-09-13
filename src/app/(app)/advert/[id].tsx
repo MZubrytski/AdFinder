@@ -2,7 +2,12 @@ import { placeholderImageUrl } from '@/constants/placeholderImageUrl';
 import { useAdvert } from '@/hooks/useAdvert';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Dimensions, SafeAreaView } from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  SafeAreaView,
+  ScrollView,
+} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {
   Text,
@@ -14,9 +19,10 @@ import {
 import { convertTimestamp } from '@/utils/functions';
 import { AppButton } from '@/components/ui/AppButton';
 import { AdvertInfo } from '@/components/AdvertInfo';
-import { ScrollView } from 'react-native-gesture-handler';
+
 import ReactNativeModal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
+import { Map } from '@/components/Map';
 
 const { width, height } = Dimensions.get('window');
 
@@ -105,16 +111,31 @@ export default function Advert() {
             marginTop: 8,
           }}
           infoTitle="Description"
-          infoData={advert.description}
-        />
+        >
+          <Text>{advert.description}</Text>
+        </AdvertInfo>
 
         <AdvertInfo
           containerStyles={{
             marginTop: 8,
           }}
           infoTitle="Seller"
-          infoData={advert.userName}
-        />
+        >
+          <Text>{advert.userName}</Text>
+        </AdvertInfo>
+        {advert.coordinates ? (
+          <AdvertInfo
+            containerStyles={{
+              marginTop: 8,
+            }}
+            infoTitle="Seller's location"
+          >
+            <Map
+              longitude={advert.coordinates?.longitude}
+              latitude={advert.coordinates?.latitude}
+            />
+          </AdvertInfo>
+        ) : null}
       </ScrollView>
 
       <View

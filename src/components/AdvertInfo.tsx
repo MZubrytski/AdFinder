@@ -1,13 +1,14 @@
+import { ReactNode } from 'react';
 import { Colors, Text, View } from 'react-native-ui-lib';
 
 export const AdvertInfo = ({
+  children,
   containerStyles,
   infoTitle,
-  infoData,
 }: {
+  children: ReactNode;
   containerStyles: Record<string, any>;
   infoTitle: string;
-  infoData: string;
 }) => {
   return (
     <View
@@ -27,9 +28,7 @@ export const AdvertInfo = ({
         <Text headerSmall>{infoTitle}</Text>
       </View>
 
-      <View padding-16>
-        <Text>{infoData}</Text>
-      </View>
+      <View padding-16>{children}</View>
     </View>
   );
 };

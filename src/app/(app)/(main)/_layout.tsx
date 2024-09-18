@@ -4,8 +4,18 @@ import React from 'react';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors, Text } from 'react-native-ui-lib';
 import { HeaderIcon } from '@/components/navigation/HeaderIcon';
+import { useTranslation } from 'react-i18next';
+import { storage } from '@/storage';
 
 export default function TabLayout() {
+  const { t, i18n } = useTranslation();
+
+  const toggleLanguage = async () => {
+    const newLang = i18n.resolvedLanguage === 'en' ? 'ru' : 'en';
+    i18n.changeLanguage(newLang);
+    await storage.setItem('userLanguage', newLang);
+  };
+
   return (
     <Tabs
       screenOptions={{
@@ -18,7 +28,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: t('tabs.home'),
           tabBarIcon: ({ color, focused }) => {
             return (
               <TabBarIcon
@@ -29,7 +39,7 @@ export default function TabLayout() {
           },
           headerTitle: () => (
             <Text marginT-16 pageHeader>
-              Home
+              {t('tabs.home')}
             </Text>
           ),
           headerRight: () => (
@@ -40,7 +50,18 @@ export default function TabLayout() {
               bodyMedium
               onPress={() => {}}
             >
-              Filter
+              {t('buttons.filter')}
+            </Text>
+          ),
+          headerLeft: () => (
+            <Text
+              marginT-16
+              marginL-16
+              primaryColor
+              bodyMedium
+              onPress={toggleLanguage}
+            >
+              {i18n.resolvedLanguage === 'en' ? 'EN' : 'RU'}
             </Text>
           ),
         }}
@@ -48,7 +69,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Favorites"
         options={{
-          title: 'Favorites',
+          title: t('tabs.favorites'),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? 'bookmark' : 'bookmark-outline'}
@@ -60,9 +81,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="CreateAd"
         options={{
+          title: t('tabs.create'),
           headerTitle: () => (
-            <Text marginT-16 pageHeader>
-              Create Advert
+            <Text marginT-16 headerSmall>
+              {t('text.createAdvert')}
             </Text>
           ),
           headerLeft: () => (
@@ -86,7 +108,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Messages"
         options={{
-          title: 'Messages',
+          title: t('tabs.messages'),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? 'mail' : 'mail-outline'}
@@ -98,7 +120,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Profile"
         options={{
-          title: 'Profile',
+          title: t('tabs.profile'),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? 'person' : 'person-outline'}

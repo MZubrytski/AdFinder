@@ -1,4 +1,5 @@
 import { Colors, Text, View } from 'react-native-ui-lib';
+import { useTranslation } from 'react-i18next';
 
 export const AdvertInfo = ({
   containerStyles,
@@ -9,6 +10,7 @@ export const AdvertInfo = ({
   infoTitle: string;
   infoData: string;
 }) => {
+  const { t } = useTranslation();
   return (
     <View
       style={{
@@ -28,7 +30,7 @@ export const AdvertInfo = ({
       </View>
 
       <View padding-16>
-        <Text>{infoData}</Text>
+        <Text>{t(infoData)}</Text>
       </View>
     </View>
   );

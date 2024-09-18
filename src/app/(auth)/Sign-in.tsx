@@ -5,6 +5,7 @@ import { Text, View } from 'react-native-ui-lib';
 import { AppButton } from '@/components/ui/AppButton';
 import { Controller, useForm } from 'react-hook-form';
 import { emailRule, passwordRule } from '@/constants/validationRules';
+import { useTranslation } from 'react-i18next';
 
 interface SignInFormData {
   email: string;
@@ -14,6 +15,7 @@ interface SignInFormData {
 export default function SignInScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const { signIn } = useAuthContext();
+  const { t } = useTranslation();
 
   const {
     control,
@@ -37,7 +39,7 @@ export default function SignInScreen() {
           render={({ field: { onChange, value } }) => {
             return (
               <AppTextField
-                placeholder="Email"
+                placeholder="email"
                 margins={{ 'marginB-16': true, 'marginT-32': true }}
                 value={value}
                 onChangeText={onChange}
@@ -53,7 +55,7 @@ export default function SignInScreen() {
           rules={passwordRule}
           render={({ field: { onChange, value } }) => (
             <AppTextField
-              placeholder="Password"
+              placeholder="password"
               margins={{ 'marginB-16': true }}
               onChangeText={onChange}
               value={value}
@@ -66,7 +68,7 @@ export default function SignInScreen() {
                     setShowPassword((isShowPassword) => !isShowPassword)
                   }
                 >
-                  {showPassword ? 'Hide' : 'Show'}
+                  {showPassword ? t('text.hide') : t('text.show')}
                 </Text>
               }
               secureTextEntry={!showPassword}
@@ -80,12 +82,11 @@ export default function SignInScreen() {
           modifiers={{ primary: true }}
           onPress={handleSubmit(onSubmit)}
           disabled={!isValid}
-        >
-          Log In
-        </AppButton>
+          label="login"
+        />
 
         <Text marginV-16 primaryColor bodyMediumSemibold center>
-          Forgot you password?
+          {t('text.forgotPassword')}
         </Text>
       </View>
     </View>

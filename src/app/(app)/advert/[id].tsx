@@ -104,7 +104,7 @@ export default function Advert() {
           containerStyles={{
             marginTop: 8,
           }}
-          infoTitle="Description"
+          infoTitle="description"
           infoData={advert.description}
         />
 
@@ -112,7 +112,7 @@ export default function Advert() {
           containerStyles={{
             marginTop: 8,
           }}
-          infoTitle="Seller"
+          infoTitle="seller"
           infoData={advert.userName}
         />
       </ScrollView>
@@ -125,7 +125,7 @@ export default function Advert() {
           borderTopColor: Colors.gray200,
         }}
       >
-        <AppButton modifiers={{ primary: true }}>Write</AppButton>
+        <AppButton modifiers={{ primary: true }} label="write" />
       </View>
 
       <ReactNativeModal
@@ -183,9 +183,11 @@ export default function Advert() {
             />
           </View>
           <View padding-8 style={{ height: 100 }}>
-            <AppButton modifiers={{ primary: true }} onPress={() => null}>
-              Write
-            </AppButton>
+            <AppButton
+              modifiers={{ primary: true }}
+              onPress={() => null}
+              label="write"
+            />
           </View>
         </View>
       </ReactNativeModal>

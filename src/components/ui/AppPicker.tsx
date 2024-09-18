@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import {
   Text,
   Colors,
@@ -31,10 +32,12 @@ export const AppPicker = ({
   margins?: Record<string, boolean | number | string>;
   errorMessage?: string;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <View {...margins} style={{ position: 'relative' }}>
       <Picker
-        placeholder={placeholderTitle}
+        placeholder={t(`placeholders.${placeholderTitle}`)}
         value={value}
         onChange={onChange}
         topBarProps={topBarProps}

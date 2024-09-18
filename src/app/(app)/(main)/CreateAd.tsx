@@ -15,7 +15,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { AppTextField } from '@/components/ui/AppTextField';
-import { CATEGORIES, CURRENCY } from '@/constants/pickerData';
+import { CURRENCY, getCategories } from '@/constants/pickerData';
 import { AppButton } from '@/components/ui/AppButton';
 import { Advert } from '@/types/advert';
 import { Timestamp } from 'firebase/firestore';
@@ -30,6 +30,7 @@ import { minLengthFieldRule, requiredRule } from '@/constants/validationRules';
 import ReactNativeModal from 'react-native-modal';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { AppButtonIcon } from '@/components/ui/AppButtonIcon';
+import { useTranslation } from 'react-i18next';
 
 interface CreateAdvertForm {
   title: string;
@@ -65,6 +66,8 @@ export default function CreateAdvertScreen() {
   const { addAdvert, isPending } = useAddAdvert();
   const { refetchAdverts } = useAdverts();
   const { dbUser } = useAuthContext();
+
+  const { t } = useTranslation();
 
   if (status === null) {
     requestPermission();
@@ -161,7 +164,7 @@ export default function CreateAdvertScreen() {
             justifyContent: 'space-between',
           }}
         >
-          <Text bodyMedium>Add Images</Text>
+          <Text bodyMedium>{t('text.addImages')}</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -173,7 +176,10 @@ export default function CreateAdvertScreen() {
             </View>
 
             <Text bodySmall>
-              {imagesUri.length} of {IMAGES_LIMIT}
+              {t('text.imagesLimit', {
+                imagesCount: imagesUri.length,
+                imagesLimit: IMAGES_LIMIT,
+              })}
             </Text>
           </View>
         </View>
@@ -247,10 +253,10 @@ export default function CreateAdvertScreen() {
         <Controller
           control={control}
           name="title"
-          rules={minLengthFieldRule('Title', 3)}
+          rules={minLengthFieldRule(t('text.title'), 3)}
           render={({ field: { onChange, value } }) => (
             <AppTextField
-              placeholder="Name of the product/service"
+              placeholder="nameOfProduct"
               onChangeText={onChange}
               value={value}
               errorMessage={errors.title?.message as string}
@@ -261,14 +267,14 @@ export default function CreateAdvertScreen() {
         <Controller
           control={control}
           name="category"
-          rules={requiredRule('Category')}
+          rules={requiredRule(t('text.category'))}
           render={({ field: { onChange, value } }) => (
             <AppPicker
-              placeholderTitle="Category"
-              items={CATEGORIES}
+              placeholderTitle="category"
+              items={getCategories()}
               value={value}
               onChange={(item) => onChange(item)}
-              topBarProps={{ title: 'Category' }}
+              topBarProps={{ title: t('placeholders.category') }}
               margins={{ 'marginV-16': true }}
               errorMessage={errors.category?.message}
             />
@@ -278,7 +284,7 @@ export default function CreateAdvertScreen() {
         <Controller
           control={control}
           name="description"
-          rules={minLengthFieldRule('Description', 10)}
+          rules={minLengthFieldRule(t('text.description'), 10)}
           render={({ field: { onChange, value } }) => (
             <AppTextField
               margins={{ 'marginB-16': true }}
@@ -289,7 +295,7 @@ export default function CreateAdvertScreen() {
               }}
               onChangeText={onChange}
               value={value}
-              placeholder="Description"
+              placeholder="description"
               errorMessage={errors.description?.message as string}
             />
           )}
@@ -301,16 +307,16 @@ export default function CreateAdvertScreen() {
               control={control}
               name="price"
               rules={{
-                required: 'Price is required',
+                required: t('validation.priceRequired'),
                 min: {
                   value: 0.01,
-                  message: 'Price must be greater than 0',
+                  message: t('validation.priceMinValue'),
                 },
               }}
               render={({ field: { onChange, value } }) => (
                 <View flexG-2>
                   <AppTextField
-                    placeholder="Price"
+                    placeholder="price"
                     modifiers={{
                       keyboardType: 'numeric',
                     }}
@@ -327,14 +333,14 @@ export default function CreateAdvertScreen() {
             <Controller
               control={control}
               name="currency"
-              rules={requiredRule('Currency')}
+              rules={requiredRule(t('text.currency'))}
               render={({ field: { onChange, value } }) => (
                 <AppPicker
-                  placeholderTitle="Currency"
+                  placeholderTitle="currency"
                   items={CURRENCY}
                   value={value}
                   onChange={(item) => onChange(item)}
-                  topBarProps={{ title: 'Currency' }}
+                  topBarProps={{ title: t('placeholders.currency') }}
                   errorMessage={errors.currency?.message}
                 />
               )}
@@ -347,9 +353,8 @@ export default function CreateAdvertScreen() {
             modifiers={{ primary: true }}
             onPress={handleSubmit(createAdvert)}
             disabled={isPending || !isValid}
-          >
-            Add Advert
-          </AppButton>
+            label="addAdvert"
+          />
         </View>
 
         <ReactNativeModal
@@ -364,7 +369,7 @@ export default function CreateAdvertScreen() {
             }}
           >
             <Text headerMedium center marginB-16 marginT-8>
-              Select Image Source
+              {t('text.selectImageSource')}
             </Text>
 
             <Ionicons
@@ -379,9 +384,8 @@ export default function CreateAdvertScreen() {
               modifiers={{ iconOnRight: true, primary: true }}
               onPress={selectImageFromLibrary}
               iconSource={() => <AppButtonIcon name="images-outline" />}
-            >
-              Choose from Gallery
-            </AppButton>
+              label="chooseFromGallery"
+            />
 
             <AppButton
               onPress={takePhoto}
@@ -391,9 +395,8 @@ export default function CreateAdvertScreen() {
                 primary: true,
               }}
               iconSource={() => <AppButtonIcon name="camera-outline" />}
-            >
-              Take a Photo
-            </AppButton>
+              label="takePhoto"
+            />
           </View>
         </ReactNativeModal>
 
@@ -463,15 +466,14 @@ export default function CreateAdvertScreen() {
             <View padding-8 style={{ height: 100 }}>
               {openedImageNumber === 1 ? (
                 <Text center bodyMediumSemibold white>
-                  Main photo
+                  {t('text.mainPhoto')}
                 </Text>
               ) : (
                 <AppButton
                   modifiers={{ primary: true }}
                   onPress={changeMainPhoto}
-                >
-                  Make a photo the main one
-                </AppButton>
+                  label="makePhotoMain"
+                />
               )}
             </View>
           </View>

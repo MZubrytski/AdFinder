@@ -1,16 +1,18 @@
+import i18n from '@/localization';
+
 export const passwordRule = {
-  required: 'Password is required',
+  required: i18n.t('validation.passwordRequired'),
   minLength: {
     value: 6,
-    message: 'Password must be at least 6 characters long',
+    message: i18n.t('validation.passwordMinLength', { minLength: 6 }),
   },
 };
 
 export const emailRule = {
-  required: 'Email is required',
+  required: i18n.t('validation.emailRequired'),
   pattern: {
     value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-    message: 'Invalid email address',
+    message: i18n.t('validation.invalidEmail'),
   },
 };
 
@@ -18,13 +20,16 @@ export const minLengthFieldRule = (
   fieldName: string,
   minLengthValue: number,
 ) => ({
-  required: `${fieldName} is required`,
+  required: i18n.t('validation.fieldRequired', { fieldName }),
   minLength: {
     value: minLengthValue,
-    message: `${fieldName} must be at least ${minLengthValue} characters long`,
+    message: i18n.t('validation.fieldMinLength', {
+      fieldName,
+      minLength: minLengthValue,
+    }),
   },
 });
 
 export const requiredRule = (fieldName: string) => ({
-  required: `${fieldName} is required`,
+  required: i18n.t('validation.fieldRequired', { fieldName }),
 });

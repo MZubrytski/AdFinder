@@ -6,9 +6,11 @@ import { useState } from 'react';
 import Carousel from 'react-native-reanimated-carousel';
 import { Card, View, Text, Colors, Image } from 'react-native-ui-lib';
 import { CarouselDots } from './ui/CarouselDots';
+import { useTranslation } from 'react-i18next';
 
 export const AdvertItem = ({ advert }: { advert: Advert }) => {
   const [currentImageNumber, setCurrentImageNumber] = useState(1);
+  const { t } = useTranslation();
 
   return (
     <Card
@@ -85,7 +87,7 @@ export const AdvertItem = ({ advert }: { advert: Advert }) => {
           {advert.price} {advert.currency}
         </Text>
         <Text marginB-16 bodySmall gray300>
-          {advert.category}
+          {t(`text.categories.${advert.category}`)}
         </Text>
       </View>
     </Card>

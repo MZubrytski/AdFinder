@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Colors, Text, TextField, View } from 'react-native-ui-lib';
 
 export const AppTextField = ({
@@ -21,6 +22,8 @@ export const AppTextField = ({
     | undefined;
   secureTextEntry?: boolean;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <View {...margins}>
       <TextField
@@ -28,7 +31,7 @@ export const AppTextField = ({
         bodyMedium
         secureTextEntry={secureTextEntry}
         onChangeText={onChangeText}
-        placeholder={placeholder}
+        placeholder={t(`placeholders.${placeholder}`)}
         placeholderTextColor={Colors.gray300}
         trailingAccessory={trailingAccessory}
         value={value}

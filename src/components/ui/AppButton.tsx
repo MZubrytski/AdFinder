@@ -1,17 +1,17 @@
-import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { ImageStyle, StyleProp } from 'react-native';
-import { Button, Colors } from 'react-native-ui-lib';
+import { Button } from 'react-native-ui-lib';
 import { ButtonSizeProp } from 'react-native-ui-lib/src/components/button/types';
 
 export const AppButton = ({
-  children,
+  label,
   disabled = false,
   onPress,
   modifiers,
   size = Button.sizes.medium,
   iconSource,
 }: {
-  children: string;
+  label: string;
   disabled?: boolean;
   onPress?: () => void;
   modifiers?: Record<string, boolean | number | string>;
@@ -20,13 +20,14 @@ export const AppButton = ({
     | ((iconStyle?: StyleProp<ImageStyle>[] | undefined) => JSX.Element)
     | null;
 }) => {
+  const { t } = useTranslation();
   return (
     <Button
       {...modifiers}
       paddingV-16
       paddingH-32
       disabled={disabled}
-      label={children}
+      label={t(`buttons.${label}`)}
       size={size}
       onPress={onPress}
       iconSource={iconSource}

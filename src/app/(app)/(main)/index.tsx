@@ -29,7 +29,7 @@ export default function HomeScreen() {
       <FlatList
         ListHeaderComponent={
           <AppTextField
-            placeholder="Search"
+            placeholder="search"
             modifiers={{
               'marginT-32': true,
               'marginB-16': true,

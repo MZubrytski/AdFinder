@@ -9,6 +9,7 @@ import {
   minLengthFieldRule,
   passwordRule,
 } from '@/constants/validationRules';
+import { useTranslation } from 'react-i18next';
 
 interface SignUpFormData {
   userName: string;
@@ -19,6 +20,7 @@ interface SignUpFormData {
 export default function SignUpScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const { signUp } = useAuthContext();
+  const { t } = useTranslation();
 
   const {
     control,
@@ -41,7 +43,7 @@ export default function SignUpScreen() {
           rules={minLengthFieldRule('Name', 3)}
           render={({ field: { onChange, value } }) => (
             <AppTextField
-              placeholder="Name"
+              placeholder="name"
               margins={{ 'marginB-16': true, 'marginT-32': true }}
               value={value}
               onChangeText={onChange}
@@ -56,7 +58,7 @@ export default function SignUpScreen() {
           rules={emailRule}
           render={({ field: { onChange, value } }) => (
             <AppTextField
-              placeholder="Email"
+              placeholder="email"
               margins={{ 'marginB-16': true }}
               value={value}
               onChangeText={onChange}
@@ -71,7 +73,7 @@ export default function SignUpScreen() {
           rules={passwordRule}
           render={({ field: { onChange, value } }) => (
             <AppTextField
-              placeholder="Password"
+              placeholder="password"
               margins={{ 'marginB-16': true }}
               value={value}
               onChangeText={onChange}
@@ -84,7 +86,7 @@ export default function SignUpScreen() {
                     setShowPassword((isShowPassword) => !isShowPassword)
                   }
                 >
-                  {showPassword ? 'Hide' : 'Show'}
+                  {showPassword ? t('text.hide') : t('text.show')}
                 </Text>
               }
               secureTextEntry={!showPassword}
@@ -95,16 +97,11 @@ export default function SignUpScreen() {
 
       <View flex bottom>
         <AppButton
-          modifiers={{ primary: true }}
+          modifiers={{ primary: true, 'marginB-20': true }}
           onPress={handleSubmit(onSubmit)}
           disabled={!isValid}
-        >
-          Sign Up
-        </AppButton>
-
-        <Text marginV-16 primaryColor bodyMediumSemibold center>
-          Forgot you password?
-        </Text>
+          label="signUp"
+        />
       </View>
     </View>
   );

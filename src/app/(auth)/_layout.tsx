@@ -3,9 +3,11 @@ import { Redirect, router, Stack } from 'expo-router';
 import React from 'react';
 import { Colors, Text } from 'react-native-ui-lib';
 import { HeaderIcon } from '@/components/navigation/HeaderIcon';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthLayout() {
   const { isSignedIn } = useAuthContext();
+  const { t } = useTranslation();
 
   if (isSignedIn) {
     return <Redirect href="/" />;
@@ -27,7 +29,7 @@ export default function AuthLayout() {
         options={{
           headerTitle: () => (
             <Text marginT-16 pageHeader>
-              Log In
+              {t('text.logIn')}
             </Text>
           ),
           headerRight: () => (
@@ -39,7 +41,7 @@ export default function AuthLayout() {
                 router.navigate('/Sign-up');
               }}
             >
-              Sign up
+              {t('text.signUp')}
             </Text>
           ),
         }}
@@ -49,7 +51,7 @@ export default function AuthLayout() {
         options={{
           headerTitle: () => (
             <Text marginT-16 pageHeader>
-              Sign Up
+              {t('text.signUp')}
             </Text>
           ),
           headerLeft: () => (
@@ -72,7 +74,7 @@ export default function AuthLayout() {
                 router.back();
               }}
             >
-              Login
+              {t('text.login')}
             </Text>
           ),
         }}

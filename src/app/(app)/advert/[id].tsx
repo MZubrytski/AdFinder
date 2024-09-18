@@ -23,6 +23,7 @@ import { AdvertInfo } from '@/components/AdvertInfo';
 import ReactNativeModal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
 import { Map } from '@/components/Map';
+import { useTranslation } from 'react-i18next';
 
 const { width, height } = Dimensions.get('window');
 
@@ -31,6 +32,7 @@ export default function Advert() {
   const { advert, isFetching } = useAdvert(id as string);
   const [currentImageNumber, setCurrentImageNumber] = useState(1);
   const [isFullScreenImageVisible, setFullScreenImageVisible] = useState(false);
+  const { t } = useTranslation();
 
   if (isFetching || !advert) {
     return (
@@ -110,7 +112,7 @@ export default function Advert() {
           containerStyles={{
             marginTop: 8,
           }}
-          infoTitle="Description"
+          infoTitle={t('description')}
         >
           <Text>{advert.description}</Text>
         </AdvertInfo>
@@ -119,7 +121,7 @@ export default function Advert() {
           containerStyles={{
             marginTop: 8,
           }}
-          infoTitle="Seller"
+          infoTitle={t('seller')}
         >
           <Text>{advert.userName}</Text>
         </AdvertInfo>
@@ -146,7 +148,7 @@ export default function Advert() {
           borderTopColor: Colors.gray200,
         }}
       >
-        <AppButton modifiers={{ primary: true }}>Write</AppButton>
+        <AppButton modifiers={{ primary: true }} label="write" />
       </View>
 
       <ReactNativeModal
@@ -204,9 +206,11 @@ export default function Advert() {
             />
           </View>
           <View padding-8 style={{ height: 100 }}>
-            <AppButton modifiers={{ primary: true }} onPress={() => null}>
-              Write
-            </AppButton>
+            <AppButton
+              modifiers={{ primary: true }}
+              onPress={() => null}
+              label="write"
+            />
           </View>
         </View>
       </ReactNativeModal>

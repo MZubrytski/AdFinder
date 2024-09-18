@@ -1,29 +1,95 @@
-export const CATEGORIES = [
-  { label: 'Electronics', value: 'Electronics' },
-  { label: 'Appartment', value: 'Appartment' },
-  { label: 'Furniture', value: 'Furniture' },
-  { label: 'Vehicles', value: 'Vehicles' },
-  { label: 'Clothing', value: 'Clothing' },
-  { label: 'Books', value: 'Books' },
-  { label: 'Sports & Outdoors', value: 'Sports & Outdoors' },
-  { label: 'Home Appliances', value: 'Home Appliances' },
-  { label: 'Toys & Games', value: 'Toys & Games' },
-  { label: 'Pets', value: 'Pets' },
-  { label: 'Services', value: 'Services' },
-  { label: 'Jobs', value: 'Jobs' },
-  { label: 'Beauty & Health', value: 'Beauty & Health' },
-  { label: 'Garden & Tools', value: 'Garden & Tools' },
-  { label: 'Real Estate', value: 'Real Estate' },
-  { label: 'Art & Collectibles', value: 'Art & Collectibles' },
-  { label: 'Musical Instruments', value: 'Musical Instruments' },
-  { label: 'Office Supplies', value: 'Office Supplies' },
-  { label: 'Baby & Kids', value: 'Baby & Kids' },
+import { Category } from '@/enums/category';
+import i18n from '@/localization/localization';
+
+export const getCategories = () => [
   {
-    label: 'Automotive Parts & Accessories',
-    value: 'Automotive Parts & Accessories',
+    label: i18n.t(`text.categories.${Category.Electronics}`),
+    value: Category.Electronics,
   },
-  { label: 'Food & Beverages', value: 'Food & Beverages' },
-  { label: 'Hobbies & Crafts', value: 'Hobbies & Crafts' },
+  {
+    label: i18n.t(`text.categories.${Category.Appartment}`),
+    value: Category.Appartment,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.Furniture}`),
+    value: Category.Furniture,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.Vehicles}`),
+    value: Category.Vehicles,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.Clothing}`),
+    value: Category.Clothing,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.Books}`),
+    value: Category.Books,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.SportsAndOutdoors}`),
+    value: Category.SportsAndOutdoors,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.HomeAppliances}`),
+    value: Category.HomeAppliances,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.ToysAndGames}`),
+    value: Category.ToysAndGames,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.Pets}`),
+    value: Category.Pets,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.Services}`),
+    value: Category.Services,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.Jobs}`),
+    value: Category.Jobs,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.BeautyAndHealth}`),
+    value: Category.BeautyAndHealth,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.GardenAndTools}`),
+    value: Category.GardenAndTools,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.RealEstate}`),
+    value: Category.RealEstate,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.ArtAndCollectibles}`),
+    value: Category.ArtAndCollectibles,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.MusicalInstruments}`),
+    value: Category.MusicalInstruments,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.OfficeSupplies}`),
+    value: Category.OfficeSupplies,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.BabyAndKids}`),
+    value: Category.BabyAndKids,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.AutomotivePartsAndAccessories}`),
+    value: Category.AutomotivePartsAndAccessories,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.FoodAndBeverages}`),
+    value: Category.FoodAndBeverages,
+  },
+  {
+    label: i18n.t(`text.categories.${Category.HobbiesAndCrafts}`),
+    value: Category.HobbiesAndCrafts,
+  },
 ];
 
 export const CURRENCY = [

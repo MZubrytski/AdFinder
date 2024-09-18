@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import MapView, { Marker, PROVIDER_DEFAULT } from 'react-native-maps';
 import { Colors } from 'react-native-ui-lib';
 
@@ -10,6 +11,8 @@ export const Map = ({
   latitude: number;
   longitude: number;
 }) => {
+  const { t } = useTranslation();
+
   return (
     <MapView
       provider={PROVIDER_DEFAULT}
@@ -32,7 +35,7 @@ export const Map = ({
           latitude,
           longitude,
         }}
-        title="seller"
+        title={t('text.seller')}
         image={markerImage}
       ></Marker>
     </MapView>

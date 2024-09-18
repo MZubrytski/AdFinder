@@ -48,19 +48,6 @@ const IMAGES_LIMIT = 9;
 const { width, height } = Dimensions.get('window');
 
 export default function CreateAdvertScreen() {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm<CreateAdvertForm>({
-    mode: 'onChange',
-  });
-
-  const carouselRef = useRef<ICarouselInstance | null>(null);
-
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null,
-  );
   const [errorShowLocationMsg, setErrorShowLocationMsg] = useState<string>('');
   const [mediaLibraryStatus, requestMediaLibraryPermission] =
     ImagePicker.useMediaLibraryPermissions();
@@ -71,6 +58,24 @@ export default function CreateAdvertScreen() {
   const [isChoosePhotoModalVisible, setChoosePhotoModalModalVisible] =
     useState<boolean>(false);
   const [openedImageNumber, setImageNumber] = useState<number>(0);
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null,
+  );
+
+  const { addAdvert, isPending } = useAddAdvert();
+  const { refetchAdverts } = useAdverts();
+  const { dbUser } = useAuthContext();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<CreateAdvertForm>({
+    mode: 'onChange',
+  });
+
+  const carouselRef = useRef<ICarouselInstance | null>(null);
+  const { t } = useTranslation();
 
   const [locationStatus, requestLocationPermission] =
     Location.useForegroundPermissions();
@@ -78,10 +83,6 @@ export default function CreateAdvertScreen() {
   if (mediaLibraryStatus === null) {
     requestMediaLibraryPermission();
   }
-
-  const { addAdvert, isPending } = useAddAdvert();
-  const { refetchAdverts } = useAdverts();
-  const { dbUser } = useAuthContext();
 
   const handleShowMyLocation = async (isShowLocation: boolean) => {
     if (!isShowLocation) {
@@ -104,11 +105,6 @@ export default function CreateAdvertScreen() {
     setLocation(location);
     setShowMyPosition(isShowLocation);
   };
-  const { t } = useTranslation();
-
-  if (status === null) {
-    requestPermission();
-  }
 
   const selectImageFromLibrary = async () => {
     setChoosePhotoModalModalVisible(false);
@@ -397,7 +393,7 @@ export default function CreateAdvertScreen() {
         <Checkbox
           value={showMyLocation}
           disabled={!!errorShowLocationMsg}
-          label={'Show my location'}
+          label={t('text.showMyLocation')}
           color={!!errorShowLocationMsg ? Colors.gray100 : Colors.primaryColor}
           onValueChange={handleShowMyLocation}
         />
@@ -408,7 +404,7 @@ export default function CreateAdvertScreen() {
 
         {showMyLocation ? (
           <>
-            <Text bodyMedium>The buyer will see a map with this marker</Text>
+            <Text bodyMedium>{t('text.noteAboutLocation')}</Text>
             <Map
               latitude={location?.coords.latitude as number}
               longitude={location?.coords.longitude as number}

@@ -112,7 +112,7 @@ export default function Advert() {
           containerStyles={{
             marginTop: 8,
           }}
-          infoTitle={t('description')}
+          infoTitle={t('text.description')}
         >
           <Text>{advert.description}</Text>
         </AdvertInfo>
@@ -121,7 +121,7 @@ export default function Advert() {
           containerStyles={{
             marginTop: 8,
           }}
-          infoTitle={t('seller')}
+          infoTitle={t('text.seller')}
         >
           <Text>{advert.userName}</Text>
         </AdvertInfo>
@@ -130,7 +130,7 @@ export default function Advert() {
             containerStyles={{
               marginTop: 8,
             }}
-            infoTitle="Seller's location"
+            infoTitle={t('text.sellerLocation')}
           >
             <Map
               longitude={advert.coordinates?.longitude}

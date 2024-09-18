@@ -10,10 +10,10 @@ import { storage } from '@/storage';
 export default function TabLayout() {
   const { t, i18n } = useTranslation();
 
-  const toggleLanguage = () => {
+  const toggleLanguage = async () => {
     const newLang = i18n.resolvedLanguage === 'en' ? 'ru' : 'en';
     i18n.changeLanguage(newLang);
-    storage.setItem('userLanguage', newLang);
+    await storage.setItem('userLanguage', newLang);
   };
 
   return (

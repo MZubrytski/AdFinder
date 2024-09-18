@@ -29,6 +29,8 @@ export const ru = {
     showMyLocation: 'Показать мое местоположение',
     noteAboutLocation: 'Покупатель увидит карту с этим маркером',
     sellerLocation: 'Местонахождение продавца',
+    errorLocationMessage:
+      'В разрешении на доступ к местоположению было отказано',
     categories: {
       [Category.Electronics]: 'Электроника',
       [Category.Appartment]: 'Квартира',

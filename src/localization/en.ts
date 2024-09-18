@@ -29,6 +29,7 @@ export const en = {
     showMyLocation: 'Show my location',
     noteAboutLocation: 'The buyer will see a map with this marker',
     sellerLocation: "Seller's location",
+    errorLocationMessage: 'Permission to access location was denied',
     categories: {
       [Category.Electronics]: 'Electronics',
       [Category.Appartment]: 'Appartment',

@@ -95,7 +95,7 @@ export default function CreateAdvertScreen() {
       const statusResponse = await requestLocationPermission();
 
       if (statusResponse.status !== 'granted') {
-        setErrorShowLocationMsg('Permission to access location was denied');
+        setErrorShowLocationMsg(t('text.errorLocationMessage'));
         return;
       }
     }

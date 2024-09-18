@@ -1,5 +1,5 @@
 import { Category } from '@/enums/category';
-import i18n from '@/localization/localization';
+import i18n from '@/localization';
 
 export const getCategories = () => [
   {

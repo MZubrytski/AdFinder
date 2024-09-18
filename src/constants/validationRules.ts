@@ -1,4 +1,4 @@
-import i18n from '@/localization/localization';
+import i18n from '@/localization';
 
 export const passwordRule = {
   required: i18n.t('validation.passwordRequired'),

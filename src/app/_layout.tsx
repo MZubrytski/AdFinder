@@ -15,7 +15,7 @@ import '../../firebaseConfig';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import '../theme';
-import '../localization/localization';
+import '../localization';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.

@@ -26,6 +26,11 @@ export const ru = {
     login: 'Войти',
     logIn: 'Авторизация',
     imagesLimit: '{{imagesCount}} из {{imagesLimit}}',
+    showMyLocation: 'Показать мое местоположение',
+    noteAboutLocation: 'Покупатель увидит карту с этим маркером',
+    sellerLocation: 'Местонахождение продавца',
+    errorLocationMessage:
+      'В разрешении на доступ к местоположению было отказано',
     categories: {
       [Category.Electronics]: 'Электроника',
       [Category.Appartment]: 'Квартира',

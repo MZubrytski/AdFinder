@@ -6,6 +6,7 @@ import {
   Image,
   Button,
   TouchableOpacity,
+  Checkbox,
 } from 'react-native-ui-lib';
 import * as ImagePicker from 'expo-image-picker';
 import {
@@ -30,6 +31,8 @@ import { minLengthFieldRule, requiredRule } from '@/constants/validationRules';
 import ReactNativeModal from 'react-native-modal';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { AppButtonIcon } from '@/components/ui/AppButtonIcon';
+import * as Location from 'expo-location';
+import { Map } from '@/components/Map';
 import { useTranslation } from 'react-i18next';
 
 interface CreateAdvertForm {
@@ -45,6 +48,24 @@ const IMAGES_LIMIT = 9;
 const { width, height } = Dimensions.get('window');
 
 export default function CreateAdvertScreen() {
+  const [errorShowLocationMsg, setErrorShowLocationMsg] = useState<string>('');
+  const [mediaLibraryStatus, requestMediaLibraryPermission] =
+    ImagePicker.useMediaLibraryPermissions();
+  const [showMyLocation, setShowMyPosition] = useState<boolean>(false);
+  const [imagesUri, setImages] = useState<string[]>([]);
+  const [isFullScreenImageVisible, setFullScreenImageVisible] =
+    useState<boolean>(false);
+  const [isChoosePhotoModalVisible, setChoosePhotoModalModalVisible] =
+    useState<boolean>(false);
+  const [openedImageNumber, setImageNumber] = useState<number>(0);
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null,
+  );
+
+  const { addAdvert, isPending } = useAddAdvert();
+  const { refetchAdverts } = useAdverts();
+  const { dbUser } = useAuthContext();
+
   const {
     control,
     handleSubmit,
@@ -53,25 +74,37 @@ export default function CreateAdvertScreen() {
     mode: 'onChange',
   });
 
-  const [imagesUri, setImages] = useState<string[]>([]);
-  const [isFullScreenImageVisible, setFullScreenImageVisible] =
-    useState<boolean>(false);
-  const [isChoosePhotoModalVisible, setChoosePhotoModalModalVisible] =
-    useState<boolean>(false);
-  const [openedImageNumber, setImageNumber] = useState<number>(0);
   const carouselRef = useRef<ICarouselInstance | null>(null);
-
-  const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
-
-  const { addAdvert, isPending } = useAddAdvert();
-  const { refetchAdverts } = useAdverts();
-  const { dbUser } = useAuthContext();
-
   const { t } = useTranslation();
 
-  if (status === null) {
-    requestPermission();
+  const [locationStatus, requestLocationPermission] =
+    Location.useForegroundPermissions();
+
+  if (mediaLibraryStatus === null) {
+    requestMediaLibraryPermission();
   }
+
+  const handleShowMyLocation = async (isShowLocation: boolean) => {
+    if (!isShowLocation) {
+      setShowMyPosition(isShowLocation);
+      setLocation(null);
+      return;
+    }
+
+    if (locationStatus?.status !== 'granted') {
+      const statusResponse = await requestLocationPermission();
+
+      if (statusResponse.status !== 'granted') {
+        setErrorShowLocationMsg(t('text.errorLocationMessage'));
+        return;
+      }
+    }
+
+    const location = await Location.getCurrentPositionAsync({});
+
+    setLocation(location);
+    setShowMyPosition(isShowLocation);
+  };
 
   const selectImageFromLibrary = async () => {
     setChoosePhotoModalModalVisible(false);
@@ -126,6 +159,14 @@ export default function CreateAdvertScreen() {
     currency,
   }: CreateAdvertForm) => {
     const numericPrice = parseFloat(price);
+    const sellerLocation = location
+      ? {
+          coordinates: {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          },
+        }
+      : {};
 
     await addAdvert({
       advert: {
@@ -137,6 +178,7 @@ export default function CreateAdvertScreen() {
         userId: dbUser?.id,
         userName: dbUser?.userName,
         created: Timestamp.now(),
+        ...sellerLocation,
       } as Advert,
       imagesPath: imagesUri,
     });
@@ -348,7 +390,29 @@ export default function CreateAdvertScreen() {
           </View>
         </View>
 
-        <View flex bottom>
+        <Checkbox
+          value={showMyLocation}
+          disabled={!!errorShowLocationMsg}
+          label={t('text.showMyLocation')}
+          color={!!errorShowLocationMsg ? Colors.gray100 : Colors.primaryColor}
+          onValueChange={handleShowMyLocation}
+        />
+
+        {errorShowLocationMsg ? (
+          <Text dangerText>{errorShowLocationMsg}</Text>
+        ) : null}
+
+        {showMyLocation ? (
+          <>
+            <Text bodyMedium>{t('text.noteAboutLocation')}</Text>
+            <Map
+              latitude={location?.coords.latitude as number}
+              longitude={location?.coords.longitude as number}
+            />
+          </>
+        ) : null}
+
+        <View marginT-16 flex bottom>
           <AppButton
             modifiers={{ primary: true }}
             onPress={handleSubmit(createAdvert)}

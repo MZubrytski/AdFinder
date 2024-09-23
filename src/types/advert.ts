@@ -11,4 +11,8 @@ export interface Advert {
   created: Timestamp;
   userId: string;
   userName: string;
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
 }

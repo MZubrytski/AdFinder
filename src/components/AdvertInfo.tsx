@@ -1,14 +1,15 @@
+import { ReactNode } from 'react';
 import { Colors, Text, View } from 'react-native-ui-lib';
 import { useTranslation } from 'react-i18next';
 
 export const AdvertInfo = ({
+  children,
   containerStyles,
   infoTitle,
-  infoData,
 }: {
+  children: ReactNode;
   containerStyles: Record<string, any>;
   infoTitle: string;
-  infoData: string;
 }) => {
   const { t } = useTranslation();
   return (
@@ -29,9 +30,7 @@ export const AdvertInfo = ({
         <Text headerSmall>{infoTitle}</Text>
       </View>
 
-      <View padding-16>
-        <Text>{t(infoData)}</Text>
-      </View>
+      <View padding-16>{children}</View>
     </View>
   );
 };

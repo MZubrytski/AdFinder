@@ -2,7 +2,12 @@ import { placeholderImageUrl } from '@/constants/placeholderImageUrl';
 import { useAdvert } from '@/hooks/useAdvert';
 import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { ActivityIndicator, Dimensions, SafeAreaView } from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  SafeAreaView,
+  ScrollView,
+} from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import {
   Text,
@@ -14,9 +19,11 @@ import {
 import { convertTimestamp } from '@/utils/functions';
 import { AppButton } from '@/components/ui/AppButton';
 import { AdvertInfo } from '@/components/AdvertInfo';
-import { ScrollView } from 'react-native-gesture-handler';
+
 import ReactNativeModal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
+import { Map } from '@/components/Map';
+import { useTranslation } from 'react-i18next';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,6 +32,7 @@ export default function Advert() {
   const { advert, isFetching } = useAdvert(id as string);
   const [currentImageNumber, setCurrentImageNumber] = useState(1);
   const [isFullScreenImageVisible, setFullScreenImageVisible] = useState(false);
+  const { t } = useTranslation();
 
   if (isFetching || !advert) {
     return (
@@ -104,17 +112,32 @@ export default function Advert() {
           containerStyles={{
             marginTop: 8,
           }}
-          infoTitle="description"
-          infoData={advert.description}
-        />
+          infoTitle={t('text.description')}
+        >
+          <Text>{advert.description}</Text>
+        </AdvertInfo>
 
         <AdvertInfo
           containerStyles={{
             marginTop: 8,
           }}
-          infoTitle="seller"
-          infoData={advert.userName}
-        />
+          infoTitle={t('text.seller')}
+        >
+          <Text>{advert.userName}</Text>
+        </AdvertInfo>
+        {advert.coordinates ? (
+          <AdvertInfo
+            containerStyles={{
+              marginTop: 8,
+            }}
+            infoTitle={t('text.sellerLocation')}
+          >
+            <Map
+              longitude={advert.coordinates?.longitude}
+              latitude={advert.coordinates?.latitude}
+            />
+          </AdvertInfo>
+        ) : null}
       </ScrollView>
 
       <View

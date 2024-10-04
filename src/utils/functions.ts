@@ -8,3 +8,12 @@ export function convertTimestamp(timestamp: Timestamp): string {
 
   return mm + '/' + dd + '/' + yyyy;
 }
+
+export function convertNumberToDate(number: number): string {
+  const date = new Date(number);
+  const mm = (date.getMonth() + 1).toString().padStart(2, '0');
+  const dd = date.getDate().toString().padStart(2, '0');
+  const yyyy = date.getFullYear();
+
+  return mm + '/' + dd + '/' + yyyy;
+}

@@ -16,7 +16,7 @@ import {
   Colors,
   TouchableOpacity,
 } from 'react-native-ui-lib';
-import { convertTimestamp } from '@/utils/functions';
+import { convertNumberToDate, convertTimestamp } from '@/utils/functions';
 import { AppButton } from '@/components/ui/AppButton';
 import { AdvertInfo } from '@/components/AdvertInfo';
 
@@ -24,11 +24,14 @@ import ReactNativeModal from 'react-native-modal';
 import { Ionicons } from '@expo/vector-icons';
 import { Map } from '@/components/Map';
 import { useTranslation } from 'react-i18next';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { ConnectionIndicator } from '@/components/ConnectionIndicator';
 
 const { width, height } = Dimensions.get('window');
 
 export default function Advert() {
   const { id } = useLocalSearchParams();
+  const { isConnected } = useNetInfo();
   const { advert, isFetching } = useAdvert(id as string);
   const [currentImageNumber, setCurrentImageNumber] = useState(1);
   const [isFullScreenImageVisible, setFullScreenImageVisible] = useState(false);
@@ -43,6 +46,11 @@ export default function Advert() {
       </SafeAreaView>
     );
   }
+
+  const dateOfCreated =
+    typeof advert.created === 'number'
+      ? convertNumberToDate(advert.created)
+      : convertTimestamp(advert.created);
 
   return (
     <View style={{ flex: 1 }}>
@@ -84,7 +92,7 @@ export default function Advert() {
                 }}
               >
                 <Text bodySmall white>
-                  {currentImageNumber}/{advert.images.length}
+                  {currentImageNumber}/{advert.images?.length}
                 </Text>
               </View>
             </>
@@ -104,7 +112,7 @@ export default function Advert() {
             {advert.title}
           </Text>
           <Text bodySmall marginB-8>
-            {convertTimestamp(advert.created)}
+            {dateOfCreated as string}
           </Text>
         </View>
 
@@ -146,6 +154,7 @@ export default function Advert() {
           backgroundColor: Colors.white,
           borderTopWidth: 1,
           borderTopColor: Colors.gray200,
+          paddingBottom: isConnected ? 16 : 40,
         }}
       >
         <AppButton modifiers={{ primary: true }} label="write" />
@@ -172,7 +181,7 @@ export default function Advert() {
             }}
           >
             <Text bodyMedium white>
-              {currentImageNumber}/{advert.images.length}
+              {currentImageNumber}/{advert.images?.length}
             </Text>
             <Ionicons
               name="close-outline"
@@ -214,6 +223,16 @@ export default function Advert() {
           </View>
         </View>
       </ReactNativeModal>
+
+      {isConnected ? null : (
+        <ConnectionIndicator
+          containerStyles={{
+            position: 'absolute',
+            paddingHorizontal: 16,
+            bottom: 4,
+          }}
+        />
+      )}
     </View>
   );
 }

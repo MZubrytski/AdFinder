@@ -52,23 +52,28 @@ class FirebaseService {
   }
 
   async uploadImages(imagesPath: string[]): Promise<string[]> {
-    const imageUrls = await Promise.all(
-      imagesPath.map(async (imagePath) => {
-        const response = await fetch(imagePath);
-        const blob = await response.blob();
-        const filename = imagePath
-          .substring(imagePath.lastIndexOf('/'))
-          .replace('/', '');
+    try {
+      const imageUrls = await Promise.all(
+        imagesPath.map(async (imagePath) => {
+          const response = await fetch(imagePath);
+          const blob = await response.blob();
+          const filename = imagePath
+            .substring(imagePath.lastIndexOf('/'))
+            .replace('/', '');
 
-        const imageRef = ref(filesStorage, filename);
-        const result = await uploadBytes(imageRef, blob);
+          const imageRef = ref(filesStorage, filename);
+          const result = await uploadBytes(imageRef, blob);
 
-        const url = await getDownloadURL(result.ref);
+          const url = await getDownloadURL(result.ref);
 
-        return url;
-      }),
-    );
-    return imageUrls;
+          return url;
+        }),
+      );
+      return imageUrls;
+    } catch (e) {
+      console.log('error', e);
+      return [];
+    }
   }
 }
 

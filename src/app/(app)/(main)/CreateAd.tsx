@@ -34,6 +34,8 @@ import { AppButtonIcon } from '@/components/ui/AppButtonIcon';
 import * as Location from 'expo-location';
 import { Map } from '@/components/Map';
 import { useTranslation } from 'react-i18next';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { ConnectionIndicator } from '@/components/ConnectionIndicator';
 
 interface CreateAdvertForm {
   title: string;
@@ -61,6 +63,7 @@ export default function CreateAdvertScreen() {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null,
   );
+  const { isConnected } = useNetInfo();
 
   const { addAdvert, isPending } = useAddAdvert();
   const { refetchAdverts } = useAdverts();
@@ -198,7 +201,13 @@ export default function CreateAdvertScreen() {
 
   return (
     <KeyboardAvoidingView behavior={'padding'} style={styles.container}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          padding: 16,
+          paddingBottom: isConnected ? 16 : 40,
+        }}
+      >
         <View
           marginB-8
           style={{
@@ -411,6 +420,16 @@ export default function CreateAdvertScreen() {
             />
           </>
         ) : null}
+
+        {isConnected ? null : (
+          <ConnectionIndicator
+            containerStyles={{
+              position: 'absolute',
+              left: 16,
+              bottom: 4,
+            }}
+          />
+        )}
 
         <View marginT-16 flex bottom>
           <AppButton

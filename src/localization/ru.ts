@@ -31,6 +31,7 @@ export const ru = {
     sellerLocation: 'Местонахождение продавца',
     errorLocationMessage:
       'В разрешении на доступ к местоположению было отказано',
+    offlineMode: 'Приложение работает в оффлайн режиме',
     categories: {
       [Category.Electronics]: 'Электроника',
       [Category.Appartment]: 'Квартира',

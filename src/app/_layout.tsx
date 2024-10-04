@@ -17,6 +17,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '../theme';
 import '../localization';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SQLiteProvider } from 'expo-sqlite';
+import { DATABASE_NAME, SQLiteDB } from './../db';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -39,16 +41,19 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
-        >
-          <AuthContextProvider>
-            <Slot />
-          </AuthContextProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </GestureHandlerRootView>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <AuthContextProvider>
+          <SQLiteProvider
+            databaseName={DATABASE_NAME}
+            onInit={SQLiteDB.migrateDbIfNeeded}
+          >
+            <GestureHandlerRootView>
+              <Slot />
+            </GestureHandlerRootView>
+          </SQLiteProvider>
+        </AuthContextProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

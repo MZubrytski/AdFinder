@@ -30,6 +30,7 @@ export const en = {
     noteAboutLocation: 'The buyer will see a map with this marker',
     sellerLocation: "Seller's location",
     errorLocationMessage: 'Permission to access location was denied',
+    offlineMode: 'The application works offline',
     categories: {
       [Category.Electronics]: 'Electronics',
       [Category.Appartment]: 'Appartment',

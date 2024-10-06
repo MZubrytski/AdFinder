@@ -17,7 +17,6 @@ export class SQLiteDB {
     );
 
     let currentDbVersion = result?.user_version ?? 0;
-    console.log('currentDbVersion', currentDbVersion);
     if (currentDbVersion >= DATABASE_VERSION) {
       return;
     }
@@ -81,10 +80,6 @@ export class SQLiteDB {
   static async saveExistingAdverts(adverts: Advert[]) {
     try {
       await db.withTransactionAsync(async () => {
-        const myDBDATA = await db.getAllAsync('SELECT * FROM adverts');
-
-        // console.log('myDB Data', myDBDATA);
-        console.log('myDB Data', myDBDATA.length);
         for (const advert of adverts) {
           const images: string[] =
             await fileSystemService.saveFirebaseImagesLocally(advert.images);
@@ -106,8 +101,6 @@ export class SQLiteDB {
           );
         }
       });
-
-      console.log('All ads have been successfully added to the database');
     } catch (error) {
       console.error('Error when adding ads to the database::', error);
     }

@@ -27,6 +27,7 @@ export const ru = {
     logIn: 'Авторизация',
     imagesLimit: '{{imagesCount}} из {{imagesLimit}}',
     showMyLocation: 'Показать мое местоположение',
+    notAvailableOffline: 'Не доступно в оффлайн режиме',
     noteAboutLocation: 'Покупатель увидит карту с этим маркером',
     sellerLocation: 'Местонахождение продавца',
     errorLocationMessage:

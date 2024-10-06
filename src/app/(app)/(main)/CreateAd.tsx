@@ -399,13 +399,17 @@ export default function CreateAdvertScreen() {
           </View>
         </View>
 
-        <Checkbox
-          value={showMyLocation}
-          disabled={!!errorShowLocationMsg}
-          label={t('text.showMyLocation')}
-          color={!!errorShowLocationMsg ? Colors.gray100 : Colors.primaryColor}
-          onValueChange={handleShowMyLocation}
-        />
+        {isConnected && (
+          <Checkbox
+            value={showMyLocation}
+            disabled={!!errorShowLocationMsg || !isConnected}
+            label={t('text.showMyLocation')}
+            color={
+              !!errorShowLocationMsg ? Colors.gray100 : Colors.primaryColor
+            }
+            onValueChange={handleShowMyLocation}
+          />
+        )}
 
         {errorShowLocationMsg ? (
           <Text dangerText>{errorShowLocationMsg}</Text>

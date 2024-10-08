@@ -1,15 +1,36 @@
 import { advertsService } from '@/api/adverts.service';
 import { SQLiteDB } from '@/db';
+import { Advert } from '@/types/advert';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { useQuery } from '@tanstack/react-query';
+import { useSQLiteContext } from 'expo-sqlite';
 
 export const useAdverts = () => {
   const { isConnected } = useNetInfo();
-
+  const db = useSQLiteContext();
   const { data, isFetching, isError, refetch } = useQuery({
-    queryKey: ['adverts', isConnected],
-    queryFn: () =>
-      isConnected ? advertsService.getAdverts() : SQLiteDB.getAdverts(),
+    queryKey: ['adverts', isConnected, db],
+    queryFn: isConnected
+      ? async () => {
+          const newAdverts = await SQLiteDB.getNewAdverts();
+
+          if (newAdverts.length) {
+            await SQLiteDB.createAdvertFromOfflineMode(newAdverts);
+          }
+          const adverts = await advertsService.getAdverts();
+
+          await SQLiteDB.saveExistingAdverts(adverts);
+
+          return adverts;
+        }
+      : async () => {
+          if (isConnected === null) {
+            return [] as Advert[];
+          }
+          const savedAdverts = await SQLiteDB.getAdverts();
+          const newAdverts = await SQLiteDB.getNewAdverts();
+          return [...newAdverts, ...savedAdverts];
+        },
   });
 
   return {

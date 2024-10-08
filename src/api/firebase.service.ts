@@ -1,5 +1,6 @@
 import {
   collection,
+  deleteDoc,
   doc,
   DocumentData,
   getDoc,
@@ -26,6 +27,14 @@ class FirebaseService {
   ): Promise<void> {
     const documentRef = doc(collection(database, collectionName));
     await setDoc(documentRef, data);
+  }
+
+  async deleteDocument(
+    collectionName: string,
+    documentId: string,
+  ): Promise<void> {
+    const documentRef = doc(database, collectionName, documentId);
+    await deleteDoc(documentRef);
   }
 
   async getDocuments<T extends DocumentData & { id: string }>(

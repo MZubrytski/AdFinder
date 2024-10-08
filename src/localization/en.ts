@@ -27,7 +27,7 @@ export const en = {
     logIn: 'Log In',
     imagesLimit: '{{imagesCount}} of {{imagesLimit}}',
     showMyLocation: 'Show my location',
-    notAvailableOffline: 'Not Available Offline',
+    pageNotAvailableOffline: 'This page is not available offline',
     noteAboutLocation: 'The buyer will see a map with this marker',
     sellerLocation: "Seller's location",
     errorLocationMessage: 'Permission to access location was denied',
@@ -79,6 +79,7 @@ export const en = {
     makePhotoMain: 'Make a photo the main one',
     login: 'Login',
     signUp: 'Sign Up',
+    goToMainPage: 'Go to main page',
   },
   validation: {
     priceRequired: 'Price is required',

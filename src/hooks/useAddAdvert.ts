@@ -16,7 +16,12 @@ export const useAddAdvert = () => {
       advert: Advert;
       imagesPath: string[];
     }) => {
+      if (isConnected === null) {
+        return;
+      }
+
       const { advert, imagesPath } = advertData;
+
       if (isConnected) {
         await advertsService.createAdvert(advert, imagesPath);
       } else {

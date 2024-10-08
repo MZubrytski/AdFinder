@@ -35,6 +35,7 @@ export default function Advert() {
   const { advert, isFetching } = useAdvert(id as string);
   const [currentImageNumber, setCurrentImageNumber] = useState(1);
   const [isFullScreenImageVisible, setFullScreenImageVisible] = useState(false);
+
   const { t } = useTranslation();
 
   if (isFetching || !advert) {

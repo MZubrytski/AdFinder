@@ -64,8 +64,10 @@ export default function CreateAdvertScreen() {
     null,
   );
   const { isConnected } = useNetInfo();
+  const [isAddButtonDisabled, setIsAddButtonDisabled] =
+    useState<boolean>(false);
 
-  const { addAdvert, isPending } = useAddAdvert();
+  const { addAdvert } = useAddAdvert();
   const { refetchAdverts } = useAdverts();
   const { dbUser } = useAuthContext();
 
@@ -161,6 +163,7 @@ export default function CreateAdvertScreen() {
     price,
     currency,
   }: CreateAdvertForm) => {
+    setIsAddButtonDisabled(true);
     const numericPrice = parseFloat(price);
     const sellerLocation = location
       ? {
@@ -186,6 +189,7 @@ export default function CreateAdvertScreen() {
       imagesPath: imagesUri,
     });
     router.push('/');
+    setIsAddButtonDisabled(false);
     refetchAdverts();
   };
 
@@ -439,7 +443,7 @@ export default function CreateAdvertScreen() {
           <AppButton
             modifiers={{ primary: true }}
             onPress={handleSubmit(createAdvert)}
-            disabled={isPending || !isValid}
+            disabled={isAddButtonDisabled || !isValid}
             label="addAdvert"
           />
         </View>

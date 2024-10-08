@@ -8,6 +8,7 @@ export const DATABASE_NAME = 'adverts.db';
 
 const db = SQLite.openDatabaseSync(DATABASE_NAME);
 
+const ADVERTS_LIMIT = 5;
 export class SQLiteDB {
   static async migrateDbIfNeeded() {
     const DATABASE_VERSION = 1;
@@ -72,15 +73,56 @@ export class SQLiteDB {
         advert.userName,
         JSON.stringify(imagesPath),
       );
-    } catch (e) {
-      console.log('error', e);
+    } catch (error) {
+      console.log('Error when create new ads to the database:', error);
+    }
+  }
+
+  static async getNewAdverts(): Promise<Advert[]> {
+    try {
+      const allRows = await db.getAllAsync<SQLiteAdvert>(
+        'SELECT * FROM newAdverts',
+      );
+      const adverts = [];
+
+      for (const advert of allRows) {
+        adverts.push({
+          ...advert,
+          images: JSON.parse(advert.images),
+        });
+      }
+
+      return adverts;
+    } catch (error) {
+      console.error('Error when getting new adverts:', error);
+      return [];
+    }
+  }
+
+  static async createAdvertFromOfflineMode(adverts: Advert[]): Promise<void> {
+    try {
+      await db.runAsync('DELETE FROM newAdverts;');
+
+      for (const advert of adverts) {
+        delete advert.id;
+
+        await advertsService.createAdvert(
+          { ...advert, created: Timestamp.now() },
+          advert.images,
+        );
+      }
+    } catch (error) {
+      console.log('Error when create new ads from the database:', error);
     }
   }
 
   static async saveExistingAdverts(adverts: Advert[]) {
+    const lastAdverts = adverts.slice(0, ADVERTS_LIMIT);
+    await db.runAsync('DELETE FROM adverts;');
+
     try {
       await db.withTransactionAsync(async () => {
-        for (const advert of adverts) {
+        for (const advert of lastAdverts) {
           const images: string[] =
             await fileSystemService.saveFirebaseImagesLocally(advert.images);
 
@@ -102,52 +144,53 @@ export class SQLiteDB {
         }
       });
     } catch (error) {
-      console.error('Error when adding ads to the database::', error);
+      console.error('Error when adding ads to the database:', error);
     }
   }
 
   static async getAdverts(): Promise<Advert[]> {
-    const allRows = await db.getAllAsync<SQLiteAdvert>('SELECT * FROM adverts');
-    const adverts = [];
+    try {
+      const allRows = await db.getAllAsync<SQLiteAdvert>(
+        'SELECT * FROM adverts',
+      );
+      const adverts = [];
 
-    for (const advert of allRows) {
-      adverts.push({
-        ...advert,
-        images: JSON.parse(advert.images),
-      });
-    }
-
-    return adverts;
-  }
-
-  static async createAdvertFromOfflineMode(): Promise<void> {
-    const allRows = await db.getAllAsync<SQLiteAdvert>(
-      'SELECT * FROM newAdverts',
-    );
-
-    if (allRows.length) {
-      await db.runAsync('DELETE FROM newAdverts;');
-      for (const row of allRows) {
-        const rowImages = JSON.parse(row.images);
-        delete row.id;
-
-        await advertsService.createAdvert(
-          { ...row, images: rowImages, created: Timestamp.now() },
-          rowImages,
-        );
+      for (const advert of allRows) {
+        adverts.push({
+          ...advert,
+          images: JSON.parse(advert.images),
+        });
       }
+
+      return adverts;
+    } catch (error) {
+      console.error('Error when getting adverts:', error);
+      return [];
     }
   }
 
   static async getAdvert(advertId: string): Promise<Advert> {
-    const advert = (await db.getFirstAsync<SQLiteAdvert>(
-      'SELECT * FROM adverts WHERE id = ?',
-      advertId,
-    )) as SQLiteAdvert;
+    try {
+      const advert = (await db.getFirstAsync<SQLiteAdvert>(
+        'SELECT * FROM adverts WHERE id = ?',
+        advertId,
+      )) as SQLiteAdvert;
 
-    return {
-      ...advert,
-      images: JSON.parse(advert.images),
-    };
+      return {
+        ...advert,
+        images: JSON.parse(advert.images),
+      };
+    } catch (error) {
+      console.log('Error when getting ad:', error);
+      return {} as Advert;
+    }
+  }
+
+  static async deleteAdvert(advertId: string): Promise<void> {
+    try {
+      await db.runAsync('DELETE FROM adverts WHERE id = ?', advertId);
+    } catch (error) {
+      console.error(`Error when deleting advert with id ${advertId}:`, error);
+    }
   }
 }

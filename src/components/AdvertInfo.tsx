@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { Colors, Text, View } from 'react-native-ui-lib';
-import { useTranslation } from 'react-i18next';
 
 export const AdvertInfo = ({
   children,
@@ -11,7 +10,6 @@ export const AdvertInfo = ({
   containerStyles: Record<string, any>;
   infoTitle: string;
 }) => {
-  const { t } = useTranslation();
   return (
     <View
       style={{

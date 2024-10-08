@@ -27,7 +27,7 @@ export const ru = {
     logIn: 'Авторизация',
     imagesLimit: '{{imagesCount}} из {{imagesLimit}}',
     showMyLocation: 'Показать мое местоположение',
-    notAvailableOffline: 'Не доступно в оффлайн режиме',
+    pageNotAvailableOffline: 'Эта страница недоступна в офлайн режиме',
     noteAboutLocation: 'Покупатель увидит карту с этим маркером',
     sellerLocation: 'Местонахождение продавца',
     errorLocationMessage:
@@ -79,6 +79,7 @@ export const ru = {
     makePhotoMain: 'Сделать фото главным',
     login: 'Войти',
     signUp: 'Зарегистрироваться',
+    goToMainPage: 'Перейти на главную страницу',
   },
   validation: {
     priceRequired: 'Цена является обязательной',

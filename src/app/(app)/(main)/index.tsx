@@ -6,25 +6,10 @@ import { Colors, Text, View } from 'react-native-ui-lib';
 import { AppTextField } from '@/components/ui/AppTextField';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { ConnectionIndicator } from '@/components/ConnectionIndicator';
-import { useCallback, useEffect } from 'react';
-import { SQLiteDB } from '@/db';
 
 export default function HomeScreen() {
   const { adverts, isFetching, refetchAdverts } = useAdverts();
   const { isConnected } = useNetInfo();
-
-  const saveExistingAdverts = useCallback(async () => {
-    if (isConnected && adverts?.length) {
-      await SQLiteDB.saveExistingAdverts(adverts);
-      await SQLiteDB.createAdvertFromOfflineMode();
-    }
-  }, [isConnected, adverts]);
-
-  useEffect(() => {
-    if (isConnected && adverts?.length) {
-      saveExistingAdverts();
-    }
-  }, [isConnected, adverts, saveExistingAdverts]);
 
   if (isFetching) {
     return (

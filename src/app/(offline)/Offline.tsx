@@ -9,8 +9,8 @@ const offlineImage = require('@/assets/images/offline.jpg');
 export default function OfflinePage() {
   const { t } = useTranslation();
 
-  const reloadApp = () => {
-    router.push('/');
+  const navigateToMainPage = () => {
+    router.replace('/');
   };
 
   return (
@@ -32,12 +32,12 @@ export default function OfflinePage() {
           source={offlineImage}
         ></Image>
         <Text bodyMedium marginV-16>
-          {t('pageNotAvailableOffline')}
+          {t('text.pageNotAvailableOffline')}
         </Text>
         <AppButton
           label="goToMainPage"
           modifiers={{ primary: true }}
-          onPress={reloadApp}
+          onPress={navigateToMainPage}
         />
       </View>
     </SafeAreaView>

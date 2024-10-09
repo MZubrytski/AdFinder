@@ -24,6 +24,10 @@ class AdvertsService {
       images,
     });
   }
+
+  async deleteAdvert(id: string): Promise<void> {
+    await firebaseService.deleteDocument(this.collectionName, id);
+  }
 }
 
 export const advertsService = new AdvertsService();

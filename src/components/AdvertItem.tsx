@@ -1,6 +1,6 @@
 import { placeholderImageUrl } from '@/constants/placeholderImageUrl';
 import { Advert } from '@/types/advert';
-import { convertTimestamp } from '@/utils/functions';
+import { convertNumberToDate, convertTimestamp } from '@/utils/functions';
 import { Href, router } from 'expo-router';
 import { useState } from 'react';
 import Carousel from 'react-native-reanimated-carousel';
@@ -11,6 +11,11 @@ import { useTranslation } from 'react-i18next';
 export const AdvertItem = ({ advert }: { advert: Advert }) => {
   const [currentImageNumber, setCurrentImageNumber] = useState(1);
   const { t } = useTranslation();
+
+  const dateOfCreated =
+    typeof advert.created === 'number'
+      ? convertNumberToDate(advert.created)
+      : convertTimestamp(advert.created);
 
   return (
     <Card
@@ -80,7 +85,7 @@ export const AdvertItem = ({ advert }: { advert: Advert }) => {
             {advert.title}
           </Text>
           <Text bodySmall gray300 marginT-2 marginL-4 flexS-0>
-            {convertTimestamp(advert.created)}
+            {dateOfCreated}
           </Text>
         </View>
         <Text marginB-8 bodySmallSemibold>

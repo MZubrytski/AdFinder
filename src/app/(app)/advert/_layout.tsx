@@ -1,3 +1,4 @@
+import { DeleteAdvertIcon } from '@/components/navigation/DeleteAdvertIcon';
 import { HeaderIcon } from '@/components/navigation/HeaderIcon';
 import { router, Stack } from 'expo-router';
 import React from 'react';
@@ -7,7 +8,7 @@ export default function AdvertLayout() {
   return (
     <Stack
       screenOptions={{
-        title: 'Advert',
+        title: '',
         headerLeft: () => (
           <HeaderIcon
             name="arrow-back"
@@ -17,6 +18,7 @@ export default function AdvertLayout() {
             }}
           />
         ),
+        headerRight: () => <DeleteAdvertIcon />,
         contentStyle: {
           backgroundColor: Colors.gray100,
         },

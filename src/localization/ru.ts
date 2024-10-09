@@ -27,10 +27,12 @@ export const ru = {
     logIn: 'Авторизация',
     imagesLimit: '{{imagesCount}} из {{imagesLimit}}',
     showMyLocation: 'Показать мое местоположение',
+    pageNotAvailableOffline: 'Эта страница недоступна в офлайн режиме',
     noteAboutLocation: 'Покупатель увидит карту с этим маркером',
     sellerLocation: 'Местонахождение продавца',
     errorLocationMessage:
       'В разрешении на доступ к местоположению было отказано',
+    offlineMode: 'Приложение работает в оффлайн режиме',
     categories: {
       [Category.Electronics]: 'Электроника',
       [Category.Appartment]: 'Квартира',
@@ -77,6 +79,7 @@ export const ru = {
     makePhotoMain: 'Сделать фото главным',
     login: 'Войти',
     signUp: 'Зарегистрироваться',
+    goToMainPage: 'Перейти на главную страницу',
   },
   validation: {
     priceRequired: 'Цена является обязательной',

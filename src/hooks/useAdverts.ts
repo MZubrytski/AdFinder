@@ -3,13 +3,12 @@ import { SQLiteDB } from '@/db';
 import { Advert } from '@/types/advert';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { useQuery } from '@tanstack/react-query';
-import { useSQLiteContext } from 'expo-sqlite';
 
 export const useAdverts = () => {
   const { isConnected } = useNetInfo();
-  const db = useSQLiteContext();
+
   const { data, isFetching, isError, refetch } = useQuery({
-    queryKey: ['adverts', isConnected, db],
+    queryKey: ['adverts', isConnected],
     queryFn: isConnected
       ? async () => {
           const newAdverts = await SQLiteDB.getNewAdverts();

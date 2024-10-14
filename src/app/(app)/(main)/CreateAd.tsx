@@ -34,6 +34,8 @@ import { AppButtonIcon } from '@/components/ui/AppButtonIcon';
 import * as Location from 'expo-location';
 import { Map } from '@/components/Map';
 import { useTranslation } from 'react-i18next';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { ConnectionIndicator } from '@/components/ConnectionIndicator';
 
 interface CreateAdvertForm {
   title: string;
@@ -61,8 +63,11 @@ export default function CreateAdvertScreen() {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null,
   );
+  const { isConnected } = useNetInfo();
+  const [isAddButtonDisabled, setIsAddButtonDisabled] =
+    useState<boolean>(false);
 
-  const { addAdvert, isPending } = useAddAdvert();
+  const { addAdvert } = useAddAdvert();
   const { refetchAdverts } = useAdverts();
   const { dbUser } = useAuthContext();
 
@@ -158,6 +163,7 @@ export default function CreateAdvertScreen() {
     price,
     currency,
   }: CreateAdvertForm) => {
+    setIsAddButtonDisabled(true);
     const numericPrice = parseFloat(price);
     const sellerLocation = location
       ? {
@@ -183,6 +189,7 @@ export default function CreateAdvertScreen() {
       imagesPath: imagesUri,
     });
     router.push('/');
+    setIsAddButtonDisabled(false);
     refetchAdverts();
   };
 
@@ -198,7 +205,13 @@ export default function CreateAdvertScreen() {
 
   return (
     <KeyboardAvoidingView behavior={'padding'} style={styles.container}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 16 }}>
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          padding: 16,
+          paddingBottom: isConnected ? 16 : 40,
+        }}
+      >
         <View
           marginB-8
           style={{
@@ -390,13 +403,17 @@ export default function CreateAdvertScreen() {
           </View>
         </View>
 
-        <Checkbox
-          value={showMyLocation}
-          disabled={!!errorShowLocationMsg}
-          label={t('text.showMyLocation')}
-          color={!!errorShowLocationMsg ? Colors.gray100 : Colors.primaryColor}
-          onValueChange={handleShowMyLocation}
-        />
+        {isConnected && (
+          <Checkbox
+            value={showMyLocation}
+            disabled={!!errorShowLocationMsg || !isConnected}
+            label={t('text.showMyLocation')}
+            color={
+              !!errorShowLocationMsg ? Colors.gray100 : Colors.primaryColor
+            }
+            onValueChange={handleShowMyLocation}
+          />
+        )}
 
         {errorShowLocationMsg ? (
           <Text dangerText>{errorShowLocationMsg}</Text>
@@ -412,11 +429,21 @@ export default function CreateAdvertScreen() {
           </>
         ) : null}
 
+        {isConnected ? null : (
+          <ConnectionIndicator
+            containerStyles={{
+              position: 'absolute',
+              left: 16,
+              bottom: 4,
+            }}
+          />
+        )}
+
         <View marginT-16 flex bottom>
           <AppButton
             modifiers={{ primary: true }}
             onPress={handleSubmit(createAdvert)}
-            disabled={isPending || !isValid}
+            disabled={isAddButtonDisabled || !isValid}
             label="addAdvert"
           />
         </View>

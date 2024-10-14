@@ -51,7 +51,12 @@
     "react-native-ui-lib": "^7.28.0",
     "react-native-web": "~0.19.10",
     "expo-location": "~17.0.1",
-    "react-native-maps": "1.14.0"
+    "react-native-maps": "1.14.0",
+    "@react-native-community/netinfo": "11.3.1",
+    "expo-dev-client": "~4.0.26",
+    "expo-sqlite": "~14.0.6",
+    "expo-file-system": "~17.0.1",
+    "expo-sharing": "~12.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

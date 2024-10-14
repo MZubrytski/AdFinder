@@ -4,9 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AdvertItem } from '@/components/AdvertItem';
 import { Colors, Text, View } from 'react-native-ui-lib';
 import { AppTextField } from '@/components/ui/AppTextField';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { ConnectionIndicator } from '@/components/ConnectionIndicator';
 
 export default function HomeScreen() {
   const { adverts, isFetching, refetchAdverts } = useAdverts();
+  const { isConnected } = useNetInfo();
 
   if (isFetching) {
     return (
@@ -23,7 +26,9 @@ export default function HomeScreen() {
       paddingH-16
       flex
       style={{
+        position: 'relative',
         backgroundColor: Colors.light100,
+        paddingBottom: isConnected ? 0 : 20,
       }}
     >
       <FlatList
@@ -50,6 +55,15 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         overScrollMode="never"
       />
+      {isConnected ? null : (
+        <ConnectionIndicator
+          containerStyles={{
+            position: 'absolute',
+            left: 16,
+            bottom: 4,
+          }}
+        />
+      )}
     </View>
   );
 }

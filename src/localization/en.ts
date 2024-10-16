@@ -32,6 +32,7 @@ export const en = {
     sellerLocation: "Seller's location",
     errorLocationMessage: 'Permission to access location was denied',
     offlineMode: 'The application works offline',
+    advertWasAdded: 'The advert was successfully added',
     categories: {
       [Category.Electronics]: 'Electronics',
       [Category.Appartment]: 'Appartment',

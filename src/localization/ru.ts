@@ -33,6 +33,7 @@ export const ru = {
     errorLocationMessage:
       'В разрешении на доступ к местоположению было отказано',
     offlineMode: 'Приложение работает в оффлайн режиме',
+    advertWasAdded: 'Объявление было успешно добавлено',
     categories: {
       [Category.Electronics]: 'Электроника',
       [Category.Appartment]: 'Квартира',

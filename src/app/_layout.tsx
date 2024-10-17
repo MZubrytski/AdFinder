@@ -19,6 +19,9 @@ import '../localization';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SQLiteProvider } from 'expo-sqlite';
 import { DATABASE_NAME, SQLiteDB } from './../db';
+import { ToastProvider } from 'react-native-toast-notifications';
+import { ToastNotification } from '@/components/ui/ToastNotification';
+import { NOTIFICATION_DURATION } from '@/constants/notification';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -48,9 +51,17 @@ export default function RootLayout() {
             databaseName={DATABASE_NAME}
             onInit={SQLiteDB.migrateDbIfNeeded}
           >
-            <GestureHandlerRootView>
-              <Slot />
-            </GestureHandlerRootView>
+            <ToastProvider
+              duration={NOTIFICATION_DURATION}
+              renderType={{
+                custom_success: (toast) => <ToastNotification toast={toast} />,
+                custom_error: (toast) => <ToastNotification toast={toast} />,
+              }}
+            >
+              <GestureHandlerRootView>
+                <Slot />
+              </GestureHandlerRootView>
+            </ToastProvider>
           </SQLiteProvider>
         </AuthContextProvider>
       </ThemeProvider>

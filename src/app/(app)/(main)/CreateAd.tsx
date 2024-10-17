@@ -36,6 +36,7 @@ import { Map } from '@/components/Map';
 import { useTranslation } from 'react-i18next';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { ConnectionIndicator } from '@/components/ConnectionIndicator';
+import { useToastNotification } from '@/hooks/useToastNotification';
 
 interface CreateAdvertForm {
   title: string;
@@ -66,6 +67,7 @@ export default function CreateAdvertScreen() {
   const { isConnected } = useNetInfo();
   const [isAddButtonDisabled, setIsAddButtonDisabled] =
     useState<boolean>(false);
+  const { showSuccessNotification } = useToastNotification();
 
   const { addAdvert } = useAddAdvert();
   const { refetchAdverts } = useAdverts();
@@ -190,6 +192,7 @@ export default function CreateAdvertScreen() {
     });
     router.push('/');
     setIsAddButtonDisabled(false);
+    showSuccessNotification(t('text.advertWasAdded'));
     refetchAdverts();
   };
 

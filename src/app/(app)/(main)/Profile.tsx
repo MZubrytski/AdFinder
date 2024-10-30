@@ -1,12 +1,25 @@
+import { ScrollView } from 'react-native';
+import { Colors } from 'react-native-ui-lib';
+import React from 'react';
+import { Collapsible } from '@/components/ui/Collapsible';
+import { GeneralInfoForm } from '@/components/GeneralInfoForm';
 import { useAuthContext } from '@/context/auth/AuthContext';
-import { Text, View } from 'react-native';
+import { PrivateInfoForm } from '@/components/PrivateInfoForm';
 
 export default function ProfileScreen() {
-  const { logout } = useAuthContext();
+  const { dbUser } = useAuthContext();
+
   return (
-    <View>
-      <Text>Profile Screen</Text>
-      <Text onPress={() => logout()}>Logout</Text>
-    </View>
+    <ScrollView
+      style={{ paddingHorizontal: 16, backgroundColor: Colors.white, flex: 1 }}
+    >
+      <Collapsible title="General information">
+        <GeneralInfoForm user={dbUser}></GeneralInfoForm>
+      </Collapsible>
+
+      <Collapsible title="Personal information">
+        <PrivateInfoForm user={dbUser}></PrivateInfoForm>
+      </Collapsible>
+    </ScrollView>
   );
 }

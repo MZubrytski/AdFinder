@@ -14,6 +14,14 @@ class UserService {
       id,
     );
   }
+
+  async updateUser(id: string, userData: Partial<DBUser>): Promise<void> {
+    return await firebaseService.updateDocument(
+      this.collectionName,
+      id,
+      userData,
+    );
+  }
 }
 
 export const userService = new UserService();

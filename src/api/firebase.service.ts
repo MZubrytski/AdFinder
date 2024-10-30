@@ -6,6 +6,7 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  updateDoc,
   WithFieldValue,
 } from 'firebase/firestore';
 import { database, filesStorage } from '../../firebaseConfig';
@@ -27,6 +28,15 @@ class FirebaseService {
   ): Promise<void> {
     const documentRef = doc(collection(database, collectionName));
     await setDoc(documentRef, data);
+  }
+
+  async updateDocument(
+    collectionName: string,
+    documentId: string,
+    data: WithFieldValue<DocumentData>,
+  ): Promise<void> {
+    const documentRef = doc(database, collectionName, documentId);
+    await updateDoc(documentRef, data);
   }
 
   async deleteDocument(

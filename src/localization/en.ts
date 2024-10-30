@@ -81,6 +81,7 @@ export const en = {
     login: 'Login',
     signUp: 'Sign Up',
     goToMainPage: 'Go to main page',
+    submit: 'Submit',
   },
   validation: {
     priceRequired: 'Price is required',

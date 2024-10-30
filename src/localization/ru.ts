@@ -81,6 +81,7 @@ export const ru = {
     login: 'Войти',
     signUp: 'Зарегистрироваться',
     goToMainPage: 'Перейти на главную страницу',
+    submit: 'Отправить',
   },
   validation: {
     priceRequired: 'Цена является обязательной',

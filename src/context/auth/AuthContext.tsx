@@ -21,12 +21,13 @@ import { DBUser } from '@/types/user';
 
 interface AuthContextInterface {
   authenticatedUser: User | null;
-  dbUser: DBUser | null;
+  dbUser: DBUser;
   isLoading: boolean;
   isSignedIn: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, userName: string) => Promise<void>;
   logout: () => Promise<void>;
+  getDBUser: (userId: string) => Promise<void>;
 }
 
 export const AuthContext = createContext({
@@ -37,7 +38,7 @@ export const AuthContext = createContext({
 export const AuthContextProvider = ({ children }: { children: any }) => {
   const initialState = {
     authenticatedUser: null,
-    dbUser: null,
+    dbUser: {} as DBUser,
     isLoading: true,
     isSignedIn: false,
   };
@@ -50,8 +51,7 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
       async (authenticatedUser) => {
         if (authenticatedUser) {
           dispatch({ type: SET_AUTH_USER, payload: authenticatedUser });
-          const dbUser = await userService.getUser(authenticatedUser.uid);
-          dispatch({ type: SET_DB_USER, payload: dbUser });
+          getDBUser(authenticatedUser.uid);
         } else {
           dispatch({ type: SIGN_OUT });
         }
@@ -103,18 +103,24 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
     }
   };
 
+  const getDBUser = async (userId: string) => {
+    const dbUser = await userService.getUser(userId);
+    dispatch({ type: SET_DB_USER, payload: dbUser });
+  };
+
   const showLoader = () => dispatch({ type: SHOW_LOADER });
 
   return (
     <AuthContext.Provider
       value={{
-        dbUser: state.dbUser,
+        dbUser: state.dbUser as DBUser,
         authenticatedUser: state.authenticatedUser,
         isLoading: state.isLoading,
         isSignedIn: state.isSignedIn,
         signIn,
         signUp,
         logout,
+        getDBUser,
       }}
     >
       {children}

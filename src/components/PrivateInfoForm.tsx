@@ -26,6 +26,7 @@ export const PrivateInfoForm = ({ user }: { user: DBUser }) => {
       gender: user.gender,
       dateOfBirthday: null,
     },
+    mode: 'onSubmit',
   });
 
   const onSubmit = async (data: PrivateInfoFormI) => {

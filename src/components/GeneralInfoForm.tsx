@@ -30,6 +30,7 @@ export const GeneralInfoForm = ({ user }: { user: DBUser }) => {
       phone: user.phone,
       postalCode: user.postalCode,
     },
+    mode: 'onSubmit'
   });
 
   const selectedCountry = watch('country');

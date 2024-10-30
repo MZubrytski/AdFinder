@@ -35,8 +35,12 @@ class FirebaseService {
     documentId: string,
     data: WithFieldValue<DocumentData>,
   ): Promise<void> {
-    const documentRef = doc(database, collectionName, documentId);
-    await updateDoc(documentRef, data);
+    try {
+      const documentRef = doc(database, collectionName, documentId);
+      await updateDoc(documentRef, data);
+    } catch (e) {
+      console.log('Error while update document', e);
+    }
   }
 
   async deleteDocument(

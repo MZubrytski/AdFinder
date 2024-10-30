@@ -4,7 +4,7 @@ import { firebaseService } from './firebase.service';
 class UserService {
   private collectionName = 'users';
 
-  async setNewUser(id: string, data: DBUser): Promise<void> {
+  async setNewUser(id: string, data: Omit<DBUser, 'id'>): Promise<void> {
     await firebaseService.setDocumentWithId(this.collectionName, id, data);
   }
 

@@ -10,7 +10,6 @@ import { Country } from '@/enums/country';
 import { GeneralInfoSchema } from '@/forms/generalInfoForm.schema';
 import { removeEmptyValues } from './../utils/functions';
 import { useUpdateUser } from '@/hooks/useUpdateUser';
-import { DBUser } from '@/types/user';
 import { useAuthContext } from '@/context/auth/AuthContext';
 
 interface GeneralInfoFormI {
@@ -19,16 +18,16 @@ interface GeneralInfoFormI {
   postalCode: string;
 }
 
-export const GeneralInfoForm = ({ user }: { user: DBUser }) => {
-  const { getDBUser } = useAuthContext();
+export const GeneralInfoForm = () => {
+  const { getDBUser, dbUser } = useAuthContext();
   const { updateUser } = useUpdateUser();
 
   const { control, handleSubmit, watch, setValue } = useForm<GeneralInfoFormI>({
     resolver: zodResolver(GeneralInfoSchema),
     defaultValues: {
-      country: user.country || Country.Belarus,
-      phone: user.phone,
-      postalCode: user.postalCode,
+      country: dbUser?.country || Country.Belarus,
+      phone: dbUser?.phone,
+      postalCode: dbUser?.postalCode,
     },
     mode: 'onSubmit',
   });
@@ -36,8 +35,9 @@ export const GeneralInfoForm = ({ user }: { user: DBUser }) => {
   const selectedCountry = watch('country');
 
   const onSubmit = async (data: GeneralInfoFormI) => {
-    await updateUser({ id: user.uid, ...removeEmptyValues(data) });
-    await getDBUser(user.uid);
+    if (!dbUser) return;
+    await updateUser({ id: dbUser.uid, ...removeEmptyValues(data) });
+    await getDBUser(dbUser.uid);
   };
 
   return (

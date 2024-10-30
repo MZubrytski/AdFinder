@@ -6,7 +6,6 @@ import { GENDERS } from '@/constants/pickerData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { removeEmptyValues } from './../utils/functions';
 import { useUpdateUser } from '@/hooks/useUpdateUser';
-import { DBUser } from '@/types/user';
 import { useAuthContext } from '@/context/auth/AuthContext';
 import { AppDatePicker } from './ui/AppDatePicker';
 import { PrivateInfoSchema } from '@/forms/privateInfoForm.schema';
@@ -16,22 +15,24 @@ interface PrivateInfoFormI {
   gender: string;
 }
 
-export const PrivateInfoForm = ({ user }: { user: DBUser }) => {
-  const { getDBUser } = useAuthContext();
+export const PrivateInfoForm = () => {
+  const { getDBUser, dbUser } = useAuthContext();
+
   const { updateUser } = useUpdateUser();
 
   const { control, handleSubmit } = useForm<PrivateInfoFormI>({
     resolver: zodResolver(PrivateInfoSchema),
     defaultValues: {
-      gender: user.gender,
+      gender: dbUser?.gender,
       dateOfBirthday: null,
     },
     mode: 'onSubmit',
   });
 
   const onSubmit = async (data: PrivateInfoFormI) => {
-    await updateUser({ id: user.uid, ...removeEmptyValues(data) });
-    await getDBUser(user.uid);
+    if (!dbUser) return;
+    await updateUser({ id: dbUser.uid, ...removeEmptyValues(data) });
+    await getDBUser(dbUser.uid);
   };
 
   return (

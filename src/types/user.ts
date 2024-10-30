@@ -9,5 +9,5 @@ export interface DBUser {
   country?: Country;
   postalCode?: string;
   dateOfBirthday?: Date;
-  gender: string;
+  gender?: string;
 }

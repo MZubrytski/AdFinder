@@ -5,7 +5,7 @@ import {
   signOut,
   User,
 } from 'firebase/auth';
-import React, { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useContext } from 'react';
 import { createContext } from 'react';
 import { auth } from '../../../firebaseConfig';
 import { Alert } from 'react-native';
@@ -19,9 +19,9 @@ import {
 import { userService } from '@/api/user.service';
 import { DBUser } from '@/types/user';
 
-interface AuthContextInterface {
+export interface AuthContextInterface {
   authenticatedUser: User | null;
-  dbUser: DBUser;
+  dbUser: DBUser | null;
   isLoading: boolean;
   isSignedIn: boolean;
   signIn: (email: string, password: string) => Promise<void>;
@@ -38,7 +38,7 @@ export const AuthContext = createContext({
 export const AuthContextProvider = ({ children }: { children: any }) => {
   const initialState = {
     authenticatedUser: null,
-    dbUser: {} as DBUser,
+    dbUser: null,
     isLoading: true,
     isSignedIn: false,
   };
@@ -87,7 +87,7 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
           email,
           userName,
           uid: user.uid,
-        } as DBUser);
+        });
       } catch (error: any) {
         Alert.alert(error.message);
       }
@@ -113,7 +113,7 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
   return (
     <AuthContext.Provider
       value={{
-        dbUser: state.dbUser as DBUser,
+        dbUser: state.dbUser,
         authenticatedUser: state.authenticatedUser,
         isLoading: state.isLoading,
         isSignedIn: state.isSignedIn,
@@ -128,4 +128,4 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
   );
 };
 
-export const useAuthContext = () => React.useContext(AuthContext);
+export const useAuthContext = () => useContext(AuthContext);

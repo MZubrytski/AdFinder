@@ -8,15 +8,10 @@ import { AppMaskInput } from './ui/AppMaskInput';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Country } from '@/enums/country';
 import { GeneralInfoSchema } from '@/forms/generalInfoForm.schema';
-import { removeEmptyValues } from './../utils/functions';
 import { useUpdateUser } from '@/hooks/useUpdateUser';
 import { useAuthContext } from '@/context/auth/AuthContext';
-
-interface GeneralInfoFormI {
-  country: Country;
-  phone: string;
-  postalCode: string;
-}
+import { removeEmptyValues } from '@/utils/objectFormatter';
+import { GeneralInfoFormI } from '@/types/forms';
 
 export const GeneralInfoForm = () => {
   const { getDBUser, dbUser } = useAuthContext();

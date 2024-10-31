@@ -1,6 +1,6 @@
 import { placeholderImageUrl } from '@/constants/placeholderImageUrl';
 import { Advert } from '@/types/advert';
-import { convertNumberToDate, convertTimestamp } from '@/utils/functions';
+import { convertNumberToDate, convertTimestamp } from '@/utils/dateFormat';
 import { Href, router } from 'expo-router';
 import { useState } from 'react';
 import Carousel from 'react-native-reanimated-carousel';

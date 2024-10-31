@@ -1,7 +1,7 @@
 import { Colors, Text, TouchableOpacity } from 'react-native-ui-lib';
 import DatePicker from 'react-native-date-picker';
 import { useState } from 'react';
-import { convertDateToString } from '@/utils/functions';
+import { convertDateToString } from '@/utils/dateFormat';
 
 export const AppDatePicker = ({
   value,

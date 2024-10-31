@@ -4,16 +4,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { AppButton } from './ui/AppButton';
 import { GENDERS } from '@/constants/pickerData';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { removeEmptyValues } from './../utils/functions';
 import { useUpdateUser } from '@/hooks/useUpdateUser';
 import { useAuthContext } from '@/context/auth/AuthContext';
 import { AppDatePicker } from './ui/AppDatePicker';
 import { PrivateInfoSchema } from '@/forms/privateInfoForm.schema';
-
-interface PrivateInfoFormI {
-  dateOfBirthday: Date | null;
-  gender: string;
-}
+import { removeEmptyValues } from '@/utils/objectFormatter';
+import { PrivateInfoFormI } from '@/types/forms';
 
 export const PrivateInfoForm = () => {
   const { getDBUser, dbUser } = useAuthContext();

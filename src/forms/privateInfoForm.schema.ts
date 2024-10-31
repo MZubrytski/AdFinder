@@ -1,4 +1,5 @@
 import { Gender } from '@/enums/genders';
+import { dateValidation, dateValidationMessage } from '@/utils/validations';
 import { z } from 'zod';
 
 export const PrivateInfoSchema = z.object({
@@ -6,7 +7,5 @@ export const PrivateInfoSchema = z.object({
   dateOfBirthday: z
     .date()
     .nullish()
-    .refine((date) => (date ? date <= new Date() : true), {
-      message: 'Date of birth cannot be in the future',
-    }),
+    .refine(dateValidation, dateValidationMessage),
 });

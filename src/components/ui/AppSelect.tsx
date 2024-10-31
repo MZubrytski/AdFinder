@@ -37,16 +37,10 @@ const AppSelect: React.FC<AppSelectProps> = ({
   return (
     <View>
       <TouchableOpacity
-        style={{
-          padding: 16,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderColor: Colors.gray200,
-          borderWidth: 1,
-          backgroundColor: Colors.gray100,
-          borderRadius: 8,
-        }}
+        style={[
+          styles.content,
+          { borderColor: Colors.gray200, backgroundColor: Colors.gray100 },
+        ]}
         onPress={() => setModalVisible(true)}
       >
         <Text
@@ -84,6 +78,14 @@ const AppSelect: React.FC<AppSelectProps> = ({
 };
 
 const styles = StyleSheet.create({
+  content: {
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderRadius: 8,
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',

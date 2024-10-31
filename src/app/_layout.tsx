@@ -21,7 +21,7 @@ import { ToastProvider } from 'react-native-toast-notifications';
 import { ToastNotification } from '@/components/ui/ToastNotification';
 import { NOTIFICATION_DURATION } from '@/constants/notification';
 import * as Font from 'expo-font';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -76,12 +76,7 @@ export default function RootLayout() {
             }}
           >
             <GestureHandlerRootView>
-              <View
-                style={{
-                  flex: 1,
-                }}
-                onLayout={onLayoutRootView}
-              >
+              <View style={styles.content} onLayout={onLayoutRootView}>
                 <Slot></Slot>
               </View>
             </GestureHandlerRootView>
@@ -91,3 +86,9 @@ export default function RootLayout() {
     </QueryClientProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+  },
+});

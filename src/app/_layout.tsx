@@ -3,10 +3,9 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
 import { Slot } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -17,11 +16,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '../theme';
 import '../localization';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SQLiteProvider } from 'expo-sqlite';
-import { DATABASE_NAME, SQLiteDB } from './../db';
+import { SQLiteDB } from './../db';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { ToastNotification } from '@/components/ui/ToastNotification';
 import { NOTIFICATION_DURATION } from '@/constants/notification';
+import * as Font from 'expo-font';
+import { StyleSheet, View } from 'react-native';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -29,17 +29,38 @@ const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    async function prepare() {
+      try {
+        // Pre-load fonts, make any API calls you need to do here
+        await Font.loadAsync({
+          SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
+        });
+        await SQLiteDB.migrateDbIfNeeded();
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
     }
-  }, [loaded]);
 
-  if (!loaded) {
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
     return null;
   }
 
@@ -47,24 +68,27 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <AuthContextProvider>
-          <SQLiteProvider
-            databaseName={DATABASE_NAME}
-            onInit={SQLiteDB.migrateDbIfNeeded}
+          <ToastProvider
+            duration={NOTIFICATION_DURATION}
+            renderType={{
+              custom_success: (toast) => <ToastNotification toast={toast} />,
+              custom_error: (toast) => <ToastNotification toast={toast} />,
+            }}
           >
-            <ToastProvider
-              duration={NOTIFICATION_DURATION}
-              renderType={{
-                custom_success: (toast) => <ToastNotification toast={toast} />,
-                custom_error: (toast) => <ToastNotification toast={toast} />,
-              }}
-            >
-              <GestureHandlerRootView>
-                <Slot />
-              </GestureHandlerRootView>
-            </ToastProvider>
-          </SQLiteProvider>
+            <GestureHandlerRootView>
+              <View style={styles.content} onLayout={onLayoutRootView}>
+                <Slot></Slot>
+              </View>
+            </GestureHandlerRootView>
+          </ToastProvider>
         </AuthContextProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+  },
+});

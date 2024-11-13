@@ -5,7 +5,7 @@ import {
   signOut,
   User,
 } from 'firebase/auth';
-import React, { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useContext } from 'react';
 import { createContext } from 'react';
 import { auth } from '../../../firebaseConfig';
 import { Alert } from 'react-native';
@@ -19,7 +19,7 @@ import {
 import { userService } from '@/api/user.service';
 import { DBUser } from '@/types/user';
 
-interface AuthContextInterface {
+export interface AuthContextInterface {
   authenticatedUser: User | null;
   dbUser: DBUser | null;
   isLoading: boolean;
@@ -27,6 +27,7 @@ interface AuthContextInterface {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, userName: string) => Promise<void>;
   logout: () => Promise<void>;
+  getDBUser: (userId: string) => Promise<void>;
 }
 
 export const AuthContext = createContext({
@@ -50,8 +51,7 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
       async (authenticatedUser) => {
         if (authenticatedUser) {
           dispatch({ type: SET_AUTH_USER, payload: authenticatedUser });
-          const dbUser = await userService.getUser(authenticatedUser.uid);
-          dispatch({ type: SET_DB_USER, payload: dbUser });
+          getDBUser(authenticatedUser.uid);
         } else {
           dispatch({ type: SIGN_OUT });
         }
@@ -87,7 +87,7 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
           email,
           userName,
           uid: user.uid,
-        } as DBUser);
+        });
       } catch (error: any) {
         Alert.alert(error.message);
       }
@@ -103,6 +103,11 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
     }
   };
 
+  const getDBUser = async (userId: string) => {
+    const dbUser = await userService.getUser(userId);
+    dispatch({ type: SET_DB_USER, payload: dbUser });
+  };
+
   const showLoader = () => dispatch({ type: SHOW_LOADER });
 
   return (
@@ -115,6 +120,7 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
         signIn,
         signUp,
         logout,
+        getDBUser,
       }}
     >
       {children}
@@ -122,4 +128,4 @@ export const AuthContextProvider = ({ children }: { children: any }) => {
   );
 };
 
-export const useAuthContext = () => React.useContext(AuthContext);
+export const useAuthContext = () => useContext(AuthContext);

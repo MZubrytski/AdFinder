@@ -1,4 +1,6 @@
 import { Category } from '@/enums/category';
+import { Country } from '@/enums/country';
+import { Gender } from '@/enums/genders';
 import i18n from '@/localization';
 
 export const getCategories = () => [
@@ -95,4 +97,14 @@ export const getCategories = () => [
 export const CURRENCY = [
   { label: 'USD', value: 'USD' },
   { label: 'EURO', value: 'EURO' },
+];
+
+export const COUNTRIES = [
+  { label: Country.Belarus, value: Country.Belarus },
+  { label: Country.Poland, value: Country.Poland },
+];
+
+export const GENDERS = [
+  { label: Gender.Male, value: Gender.Male },
+  { label: Gender.Female, value: Gender.Female },
 ];

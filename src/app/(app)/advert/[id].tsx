@@ -16,7 +16,7 @@ import {
   Colors,
   TouchableOpacity,
 } from 'react-native-ui-lib';
-import { convertNumberToDate, convertTimestamp } from '@/utils/functions';
+import { convertNumberToDate, convertTimestamp } from '@/utils/dateFormat';
 import { AppButton } from '@/components/ui/AppButton';
 import { AdvertInfo } from '@/components/AdvertInfo';
 
